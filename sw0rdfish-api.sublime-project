@@ -9,5 +9,11 @@
         "*.sublime-workspace"
       ]
 		}
-	]
+	],
+    "settings": 
+    {
+        "tab_size": 4,
+        "translate_tab_to_spaces": true,
+        "detect_indentation": true
+    }
 }

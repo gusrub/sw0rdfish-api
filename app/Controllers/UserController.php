@@ -2,6 +2,8 @@
 
 namespace Sw0rdfish\Controllers;
 
+use Sw0rdfish\Models\User as User;
+
 /**
 * 
 */
@@ -12,11 +14,16 @@ class UserController
 
   function __construct($container)
   {
-    $this->container = container;
+    $this->container = $container;
   }
 
   function index($request, $response, $args) 
   {
-    return $response->withJson(['We are in:'=>'Users controller']);
+    $users = User::all([
+      "orderBy" => "lastName",
+      "sort" => "ASC",
+      "page" => 1
+    ]);
+    return $response->withJson($users);
   }
 }

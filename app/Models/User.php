@@ -5,11 +5,16 @@ namespace Sw0rdfish\Models;
 /**
 * 
 */
-class User
+class User extends BaseModel
 {
-  
-  function __construct()
-  {
-    
-  }
+
+    const TABLE_NAME = 'users';
+
+    public $firstName;
+    public $lastName;
+    public $email;
+    public $password;
+    public $role;
+
+
 }
