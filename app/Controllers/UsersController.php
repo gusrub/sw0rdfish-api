@@ -3,11 +3,13 @@
 namespace Sw0rdfish\Controllers;
 
 use Sw0rdfish\Models\User as User;
+use Sw0rdfish\Models\Secret as Secret;
+use Sw0rdfish\Models\CreditCardSecret as CreditCardSecret;
 
 /**
 * 
 */
-class UserController
+class UsersController
 {
   
   protected $container;
@@ -19,11 +21,7 @@ class UserController
 
   function index($request, $response, $args) 
   {
-    $users = User::all([
-      "orderBy" => "lastName",
-      "sort" => "ASC",
-      "page" => 1
-    ]);
+    $users = User::all();
     return $response->withJson($users);
   }
 }

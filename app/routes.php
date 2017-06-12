@@ -7,4 +7,4 @@ $app->get('/', function (Request $request, Response $response) {
     return $response->withJson(['foo'=>'bar']);
 });
 
-$app->get('/users', Sw0rdfish\Controllers\UserController::class . ':index');
+$app->get('/users', Sw0rdfish\Controllers\UsersController::class . ':index');
