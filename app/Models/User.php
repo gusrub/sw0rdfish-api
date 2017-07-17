@@ -11,6 +11,9 @@ class User extends BaseModel
     const ROLES = ["admin", "user", "super"];
     const TABLE_NAME = 'users';
     const VALIDATIONS = [
+        "id" => [
+            "numeric"
+        ],
         "firstName" => [
             "presence"
         ],
@@ -19,14 +22,15 @@ class User extends BaseModel
         ],
         "email" => [
             "presence",
-            "validEmail",
-            "uniqueness"
+            "email",
+            "uniqueness" => [
+                "table" => self::TABLE_NAME,
+                "field" => "email"
+            ]
         ],
         "role" => [
             "presence",
-            "inclusion" => [
-                self::ROLES
-            ]
+            "inclusion" => self::ROLES
         ]
     ];
 

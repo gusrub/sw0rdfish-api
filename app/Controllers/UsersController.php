@@ -21,7 +21,8 @@ class UsersController
 
   function index($request, $response, $args) 
   {
-    $users = User::all();
-    return $response->withJson($users);
+    $user = new User();
+    $user->valid();
+    return $response->withJson($user->getValidationErrors());
   }
 }
