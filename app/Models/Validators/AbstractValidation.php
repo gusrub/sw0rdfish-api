@@ -20,7 +20,10 @@ abstract class AbstractValidation
     {
         $this->object = $object;
         $this->field = $field;
-        $this->options = $options;
+
+        if (isset($options)) {
+            $this->options = $options;
+        }
     }
 
     public function getErrors()
@@ -50,7 +53,7 @@ abstract class AbstractValidation
         }
     }
 
-    public function run(callable $validationCode)
+    protected function runValidation(callable $validationCode)
     {
         // check that the object has something
         $this->validateObject();

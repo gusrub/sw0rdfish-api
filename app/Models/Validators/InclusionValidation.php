@@ -17,7 +17,7 @@ class InclusionValidation extends AbstractValidation
 
 	public function run()
 	{
-		return parent::run(function(){
+		return parent::runValidation(function(){
 	        if (empty($this->options)) {
 	            $error = sprintf(
 	                "Invalid options given for '%s' validation, you must give an array with values to check against",

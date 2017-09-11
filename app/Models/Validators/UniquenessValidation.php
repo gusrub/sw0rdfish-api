@@ -18,7 +18,7 @@ class UniquenessValidation extends AbstractValidation
 
 	public function run()
 	{
-		return parent::run(function(){
+		return parent::runValidation(function(){
 	        $uniquenessOptions = [
 	            "table"=>null,
 	            "field"=>null

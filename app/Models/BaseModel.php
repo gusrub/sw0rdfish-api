@@ -414,5 +414,5 @@ class BaseModel
             throw new ModelException($message, $e);
         }
     }
-
+}
 

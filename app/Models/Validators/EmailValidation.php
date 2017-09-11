@@ -17,7 +17,7 @@ class EmailValidation extends AbstractValidation
 
 	public function run()
 	{
-		return parent::run(function(){
+		return parent::runValidation(function(){
 	        $email = filter_var($this->object->{$this->field}, FILTER_VALIDATE_EMAIL);
 
 	        if (empty($email)) {

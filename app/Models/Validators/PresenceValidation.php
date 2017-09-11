@@ -17,7 +17,7 @@ class PresenceValidation extends AbstractValidation
 
 	public function run()
 	{
-		return parent::run(function(){
+		return parent::runValidation(function(){
 	        if (empty($this->object->{$this->field})) {
 	            $this->errors = ["cannot be empty"];
 	        }
