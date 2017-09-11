@@ -3,6 +3,12 @@
 namespace Sw0rdfish\Models;
 
 use Sw0rdfish\Models\ModelException as ModelException;
+use Sw0rdfish\Models\DatabaseManager as DatabaseManager;
+use Sw0rdfish\Models\Validators\PresenceValidation as PresenceValidation;
+use Sw0rdfish\Models\Validators\EmailValidation as EmailValidation;
+use Sw0rdfish\Models\Validators\InclusionValidation as InclusionValidation;
+use Sw0rdfish\Models\Validators\NumericValidation as NumericValidation;
+use Sw0rdfish\Models\Validators\UniquenessValidation as UniquenessValidation;
 
 /**
 *
@@ -22,19 +28,6 @@ class BaseModel
         if($args !== null) {
             $this->assignAttributes($args);
         }
-    }
-
-    protected static function getDbConnection()
-    {
-        $dbHost = getenv("DB_HOST");
-        $dbName = getenv("DB_NAME");
-        $dbUser = getenv("DB_USER");
-        $dbPassword = getenv("DB_PASSWORD");
-
-        $db = new \PDO("mysql:host=$dbHost;dbname=$dbName", $dbUser, $dbPassword);
-        $db->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-
-        return $db;
     }
 
     protected static function generateBoundParams(Array $args)
@@ -132,7 +125,7 @@ class BaseModel
         if ($obj->valid() == false) {
             $message = sprintf("%s object has some invalid data", self::getShortName());
             $errors = $obj->getValidationErrors();
-            throw new ValidationException($message);
+            throw new ValidationException($message, $errors);
         }
     }
 
@@ -152,18 +145,45 @@ class BaseModel
         if (defined(sprintf("%s::VALIDATIONS", static::class))) {
             foreach (static::VALIDATIONS as $field => $validations) {
                 // TODO: Implement more customizable validations
-                // foreach ($validations as $type => $options) {
-                //     $validation = new Validation($field, $type, $options);
+                foreach ($validations as $key => $value ) {
+                    $type = null;
+                    $options = null;
 
-                //     if ($validation->run() == false) {
-                //         $this->validationErrors[$field][$type] = $validation->errorMessage();
-                //     }
-                // }
-                if (empty($this->{$field})) {
-                    $this->validationErrors[$field] = "Cannot be empty";
+                    // check whether this validation has/supports options
+                    if (is_numeric($key)) {
+                        $type = $value;
+                    } else {
+                        $type = $key;
+                        $options = $value;
+                    }
+
+                    switch ($type) {
+                        case 'presence':
+                            $validation = new PresenceValidation($this, $field, $options);
+                            break;
+                        case 'email':
+                            $validation = new EmailValidation($this, $field, $options);
+                            break;
+                        case 'uniqueness':
+                            $validation = new UniquenessValidation($this, $field, $options);
+                            break;
+                        case 'inclusion':
+                            $validation = new InclusionValidation($this, $field, $options);
+                            break;
+                        case 'numeric':
+                            $validation = new NumericValidation($this, $field, $options);
+                            break;
+                        default:
+                            throw new InvalidArgumentException("No '$type' validation exists.", 1);
+                    }
+
+                    if ($validation->run() == false) {
+                        $this->validationErrors[$field][$type] = $validation->getErrors();
+                    }
                 }
             }
         }
+
         return empty($this->validationErrors);
     }
 
@@ -181,7 +201,7 @@ class BaseModel
             $paginate = self::generateLimitAndOffset($args);
             $conditions = self::generateConditions($args);
 
-            $db = self::getDbConnection();
+            $db = DatabaseManager::getDbConnection();
             $query = null;
             if (defined(sprintf("%s::BASE_TABLE_NAME", static::class))) {
                 $query = sprintf(
@@ -225,7 +245,7 @@ class BaseModel
     public static function get($id)
     {
         try {
-            $db = self::getDbConnection();
+            $db = DatabaseManager::getDbConnection();
 
             $query = null;
             if (defined(sprintf("%s::BASE_TABLE_NAME", static::class))) {
@@ -260,7 +280,10 @@ class BaseModel
     public static function create(Array $args)
     {
         try {
-            $db = self::getDbConnection();
+            // run validations
+            self::runValidations($args);
+
+            $db = DatabaseManager::getDbConnection();
 
             // set creation date
             $args["createdDate"] = date("c");
@@ -314,7 +337,7 @@ class BaseModel
             // run validations
             self::runValidations($args);
 
-            $db = self::getDbConnection();
+            $db = DatabaseManager::getDbConnection();
 
             // Set the update date and unser the ID if any
             $args["updatedDate"] = date("c");
@@ -373,7 +396,7 @@ class BaseModel
     public function delete()
     {
         try {
-            $db = self::getDbConnection();
+            $db = DatabaseManager::getDbConnection();
 
             $query = null;
             if (defined(sprintf("%s::BASE_TABLE_NAME", static::class))) {
@@ -391,5 +414,5 @@ class BaseModel
             throw new ModelException($message, $e);
         }
     }
-
 }
+
