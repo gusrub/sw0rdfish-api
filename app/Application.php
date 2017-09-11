@@ -1,4 +1,4 @@
-<?php  
+<?php
 
 namespace Sw0rdfish;
 
@@ -9,15 +9,26 @@ require __DIR__ .  '/../vendor/autoload.php';
 */
 class Application extends \Slim\App
 {
-	
-	function __construct($mode, Array $options = null)
-	{
-		parent::__construct($options);
 
-		# Load configuration
-		$dotenv = new \Dotenv\Dotenv(__DIR__ . "/../", ".env.$mode");
-		$dotenv->load();		
-	}
+    function __construct(Array $options = null)
+    {
+        parent::__construct($options);
+
+        # environment mode should always be set outside the app
+        $mode = getenv('SW0RDFISH_ENV');
+        if (empty($mode)) {
+            exit("No environment set. Make sure that the SW0RDISH_ENV environment variable is set\n");
+        }
+
+        # Load configuration but only if there is a file, else we
+        # will just rely on the actual system ENV vars
+        $configPath = __DIR__ . "/../";
+        $configFile = ".env.$mode";
+        if (file_exists($configPath . $configFile)) {
+            $dotenv = new \Dotenv\Dotenv($configPath, $configFile);
+            $dotenv->load();
+        }
+    }
 }
 
 

@@ -48,7 +48,7 @@ abstract class BaseTestCase extends TestCase
 
 	private function loadApp()
 	{
-		$this->app = new Application("test", [
+		$this->app = new Application([
 					'settings' => [
 					  'displayErrorDetails' => true
 					]
