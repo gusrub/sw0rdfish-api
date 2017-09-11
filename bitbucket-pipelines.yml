@@ -19,7 +19,7 @@ pipelines:
           - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
           - composer install
           - vendor/bin/phpunit tests/
-          - mysql -u $MYSQL_USERNAME -p $MYSQL_PASSWORD sw0rdfish < sw0rdfish.sql
+          - mysql -u sw0rdfish -p sw0rdfish sw0rdfish < sw0rdfish.sql
 
 definitions:
   caches:
