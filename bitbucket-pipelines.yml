@@ -13,7 +13,9 @@ pipelines:
         services:
           - mysql
         script:
-          - apt-get update && apt-get install -y unzip
+          - apt-get update && apt-get install -y unzip php-mysql
+          - docker-php-ext-install pdo pdo_mysql
+          - docker-php-ext-enable pdo pdo_mysql
           - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
           - composer install
           - vendor/bin/phpunit tests/
