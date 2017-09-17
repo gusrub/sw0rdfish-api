@@ -18,8 +18,8 @@ pipelines:
           - docker-php-ext-enable pdo pdo_mysql
           - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
           - composer install
+          - mysql -u sw0rdfish -p sw0rdfish!123 < sw0rdfish.sql
           - vendor/bin/phpunit tests/
-          - mysql -u sw0rdfish -p sw0rdfish sw0rdfish < sw0rdfish.sql
 
 definitions:
   caches:
@@ -31,4 +31,4 @@ definitions:
         MYSQL_DATABASE: "sw0rdfish"
         MYSQL_RANDOM_ROOT_PASSWORD: "yes"
         MYSQL_USERNAME: "sw0rdfish"
-        MYSQL_PASSWORD: "sw0rdfish"
+        MYSQL_PASSWORD: "sw0rdfish!123"
