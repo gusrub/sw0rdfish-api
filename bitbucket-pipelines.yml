@@ -30,5 +30,5 @@ definitions:
       environment:
         MYSQL_DATABASE: 'sw0rdfish'
         MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
-        MYSQL_USERNAME: 'sw0rdfish_user'
+        MYSQL_USER: 'sw0rdfish_user'
         MYSQL_PASSWORD: 'sw0rdfish_password'
