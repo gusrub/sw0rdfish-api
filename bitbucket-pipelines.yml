@@ -31,4 +31,4 @@ definitions:
         MYSQL_DATABASE: "sw0rdfish"
         MYSQL_RANDOM_ROOT_PASSWORD: "yes"
         MYSQL_USERNAME: "sw0rdfish"
-        MYSQL_PASSWORD: "sw0rdfish!123"
+        MYSQL_PASSWORD: "sw0rdfish"
