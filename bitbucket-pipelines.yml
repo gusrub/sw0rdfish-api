@@ -23,7 +23,7 @@ pipelines:
 
 definitions:
   caches:
-    composer: /usr/local/composer
+    composer: vendor/
   services:
     mysql:
       image: mysql
