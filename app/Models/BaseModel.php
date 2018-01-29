@@ -352,7 +352,7 @@ class BaseModel
             $db = DatabaseManager::getDbConnection();
 
             // set creation date
-            $args["createdDate"] = date("c");
+            $args["createdDate"] = date('Y-m-d H:i:s');
             unset($args["updatedDate"]);
 
             // define actual target tables for multi-insert
@@ -416,7 +416,7 @@ class BaseModel
             $db = DatabaseManager::getDbConnection();
 
             // Set the update date and unser the ID if any
-            $args["updatedDate"] = date("c");
+            $args["updatedDate"] = date('Y-m-d H:i:s');
             unset($args["id"]);
             unset($args["createdDate"]);
 
