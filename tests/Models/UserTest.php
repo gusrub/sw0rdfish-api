@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace Tests\Models;
 
@@ -11,7 +11,7 @@ use Tests\Models\BaseTestCase;
 use Sw0rdfish\Models\User as User;
 
 /**
-* 
+*
 */
 class UserTest extends BaseTestCase
 {
@@ -22,7 +22,7 @@ class UserTest extends BaseTestCase
 	 * Test that the model defines a table constant
 	 *
 	 * @return void
-	 * @author 
+	 * @author
 	 * @test
 	 **/
 	function definesTableConstant()
@@ -34,16 +34,128 @@ class UserTest extends BaseTestCase
 	}
 
 	/**
-	 * Test that ID is a number
+	 * Test that firstName is present
 	 *
 	 * @return void
-	 * @author 
+	 * @author
 	 * @test
 	 **/
-	function validatesNumericalityOfId()
+	function validatesPresenceOfFirstName()
 	{
-		$user = new User(["id"=>"NaN"]);
+		$user = new User(['firstName'=>null]);
 		$this->assertFalse($user->valid());
-		$this->assertArrayHasKey("id", $user->getValidationErrors());
+		$errors = $user->getValidationErrors();
+		$this->assertNotEmpty($errors);
+		$this->assertArrayHasKey('firstName', $errors);
+		$this->assertArrayHasKey('presence', $errors['firstName']);
+	}
+
+	/**
+	 * Test that lastName is present
+	 *
+	 * @return void
+	 * @author
+	 * @test
+	 **/
+	function validatesPresenceOfLastName()
+	{
+		$user = new User(['lastName'=>null]);
+		$this->assertFalse($user->valid());
+		$errors = $user->getValidationErrors();
+		$this->assertNotEmpty($errors);
+		$this->assertArrayHasKey('lastName', $errors);
+		$this->assertArrayHasKey('presence', $errors['lastName']);
+	}
+
+	/**
+	 * Test that email is present
+	 *
+	 * @return void
+	 * @author
+	 * @test
+	 **/
+	function validatesPresenceOfEmail()
+	{
+		$user = new User(['email'=>null]);
+		$this->assertFalse($user->valid());
+		$errors = $user->getValidationErrors();
+		$this->assertNotEmpty($errors);
+		$this->assertArrayHasKey('email', $errors);
+		$this->assertArrayHasKey('presence', $errors['email']);
+	}
+
+	/**
+	 * Test that email is a valid address
+	 *
+	 * @return void
+	 * @author
+	 * @test
+	 **/
+	function validatesEmailFormat()
+	{
+		$user = new User(['email'=>'someone AT example.com']);
+		$this->assertFalse($user->valid());
+		$errors = $user->getValidationErrors();
+		$this->assertNotEmpty($errors);
+		$this->assertArrayHasKey('email', $errors);
+		$this->assertArrayHasKey('email', $errors['email']);
+	}
+
+	/**
+	 * Test that email is a valid address
+	 *
+	 * @return void
+	 * @author
+	 * @test
+	 **/
+	function validatesEmailUniqueness()
+	{
+		$existingUser = User::create([
+			'firstName' => 'John',
+			'lastName' => 'Wayne',
+			'email' => 'john@example.com',
+			'password' => 'password',
+			'role' => 'user'
+		]);
+		$user = new User(['email'=>'john@example.com']);
+		$this->assertFalse($user->valid());
+		$errors = $user->getValidationErrors();
+		$this->assertNotEmpty($errors);
+		$this->assertArrayHasKey('email', $errors);
+		$this->assertArrayHasKey('uniqueness', $errors['email']);
+	}
+
+	/**
+	 * Test that role is present
+	 *
+	 * @return void
+	 * @author
+	 * @test
+	 **/
+	function validatesPresenceOfRole()
+	{
+		$user = new User(['role'=>null]);
+		$this->assertFalse($user->valid());
+		$errors = $user->getValidationErrors();
+		$this->assertNotEmpty($errors);
+		$this->assertArrayHasKey('role', $errors);
+		$this->assertArrayHasKey('presence', $errors['role']);
+	}
+
+	/**
+	 * Test that role is a valid value
+	 *
+	 * @return void
+	 * @author
+	 * @test
+	 **/
+	function validatesInclusionOfRole()
+	{
+		$user = new User(['role'=>'invalid']);
+		$this->assertFalse($user->valid());
+		$errors = $user->getValidationErrors();
+		$this->assertNotEmpty($errors);
+		$this->assertArrayHasKey('role', $errors);
+		$this->assertArrayHasKey('inclusion', $errors['role']);
 	}
 }

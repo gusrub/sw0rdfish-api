@@ -128,7 +128,7 @@ DROP TABLE IF EXISTS `sw0rdfish`.`website_credential_secrets` ;
 
 CREATE TABLE IF NOT EXISTS `sw0rdfish`.`website_credential_secrets` (
   `id` INT NOT NULL,
-  `link` TEXT NOT NULL,
+  `url` TEXT NOT NULL,
   `username` TEXT NOT NULL,
   `password` TEXT NOT NULL,
   PRIMARY KEY (`id`),
@@ -166,7 +166,7 @@ DROP TABLE IF EXISTS `sw0rdfish`.`user_tokens` ;
 
 CREATE TABLE IF NOT EXISTS `sw0rdfish`.`user_tokens` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `user_id` INT NOT NULL,
+  `userId` INT NOT NULL,
   `type` VARCHAR(50) NOT NULL,
   `token` VARCHAR(255) NOT NULL,
   `expiration` DATETIME NULL,
@@ -174,11 +174,11 @@ CREATE TABLE IF NOT EXISTS `sw0rdfish`.`user_tokens` (
   `updatedDate` DATETIME NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC),
-  INDEX `fk_user_tokens_id_idx` (`user_id` ASC),
+  INDEX `fk_user_tokens_id_idx` (`userId` ASC),
   CONSTRAINT `fk_user_tokens_id`
-    FOREIGN KEY (`user_id`)
+    FOREIGN KEY (`userId`)
     REFERENCES `sw0rdfish`.`users` (`id`)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 

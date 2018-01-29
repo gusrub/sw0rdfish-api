@@ -55,7 +55,7 @@ class BaseModel
     protected static function allowedSortDirection(Array $args = null)
     {
         if (isset($args) && array_key_exists("sort", $args)) {
-            if (in_array(strtolower($args["sort"]), self::SORT_KEYWORDS)) {
+            if (in_array(strtoupper($args["sort"]), self::SORT_KEYWORDS)) {
                 return $args["sort"];
             }
         }
@@ -77,15 +77,27 @@ class BaseModel
 
     protected static function generateConditions(Array $args = null)
     {
-        if (isset($args) && array_key_exists("where", $args)) {
+        if (isset($args)) {
             $fields = [];
 
-            foreach ($args["where"] as $key => $value) {
-                if (property_exists(static::class, $key)) {
-                    $field = $key == "id" ? sprintf("%s.%s", static::TABLE_NAME, $key) : $key;
-                    array_push($fields, sprintf("%s=:%s", $field, $key));
-                } else {
-                    throw new ModelException(sprintf("Invalid filter: '%s' is not a valid field", $key));
+            if(array_key_exists('where', $args)) {
+                foreach ($args['where'] as $key => $value) {
+                    if (property_exists(static::class, $key)) {
+                        $field = $key == "id" ? sprintf("%s.%s", static::TABLE_NAME, $key) : $key;
+                        array_push($fields, sprintf("%s=:%s", $field, $key));
+                    } else {
+                        throw new ModelException(sprintf("Invalid filter: '%s' is not a valid field", $key));
+                    }
+                }
+            }
+            if (array_key_exists('like', $args)) {
+                foreach ($args['like'] as $key => $value) {
+                    if (property_exists(static::class, $key)) {
+                        $field = $key == "id" ? sprintf("%s.%s", static::TABLE_NAME, $key) : $key;
+                        array_push($fields, sprintf("%s LIKE :%s", $field, $key));
+                    } else {
+                        throw new ModelException(sprintf("Invalid filter: '%s' is not a valid field", $key));
+                    }
                 }
             }
 
@@ -119,9 +131,8 @@ class BaseModel
         return strtoupper(preg_replace('/(?<!^)[A-Z]/', '_$0', (new \ReflectionClass(new static))->getShortName()));
     }
 
-    private function runValidations(Array $args)
+    private static function runValidations($obj)
     {
-        $obj = new static($args);
         if ($obj->valid() == false) {
             $message = sprintf("%s object has some invalid data", self::getShortName());
             $errors = $obj->getValidationErrors();
@@ -129,59 +140,104 @@ class BaseModel
         }
     }
 
+    private static function sanitizeInput(Array $args)
+    {
+        $sanitizedInput = [];
+
+        foreach ($args as $key => $value) {
+            if (property_exists(static::class, $key)) {
+                $property = new \ReflectionProperty(static::class, $key);
+                if ($property->isPublic()) {
+                    $sanitizedInput["$key"] = $value;
+                }
+            } elseif (property_exists(self::class, $key)) {
+                $property = new \ReflectionProperty(self::class, $key);
+                if ($property->isPublic()) {
+                    $sanitizedInput["$key"] = $value;
+                }
+            }
+        }
+
+        return $sanitizedInput;
+    }
+
     private function assignAttributes(Array $args)
     {
         foreach ($args as $key => $value) {
             if (property_exists(static::class, $key)) {
-                $this->{$key} = $value;
-            } else {
+                $property = new \ReflectionProperty($this, $key);
+                if ($property->isPublic()) {
+                    $this->{$key} = $value;
+                }
+            } elseif (property_exists(self::class, $key)) {
+                $property = new \ReflectionProperty(self::class, $key);
+                if ($property->isPublic()) {
+                    $this->{$key} = $value;
+                }
+            }
+            else {
                 throw new ModelException(sprintf("Property '%s' does not exist in '%s'", $key, static::class));
+            }
+        }
+    }
+
+    private function runSingleValidation($field, $validators)
+    {
+        // TODO: Implement more customizable validations
+        foreach ($validators as $key => $value ) {
+            $type = null;
+            $options = null;
+
+            // check whether this validation has/supports options
+            if (is_numeric($key)) {
+                $type = $value;
+            } else {
+                $type = $key;
+                $options = $value;
+            }
+
+            switch ($type) {
+                case 'presence':
+                    $validation = new PresenceValidation($this, $field, $options);
+                    break;
+                case 'email':
+                    $validation = new EmailValidation($this, $field, $options);
+                    break;
+                case 'uniqueness':
+                    $validation = new UniquenessValidation($this, $field, $options);
+                    break;
+                case 'inclusion':
+                    $validation = new InclusionValidation($this, $field, $options);
+                    break;
+                case 'numeric':
+                    $validation = new NumericValidation($this, $field, $options);
+                    break;
+                default:
+                    throw new InvalidArgumentException("No '$type' validation exists.", 1);
+            }
+
+            if ($validation->run() == false) {
+                $this->validationErrors[$field][$type] = $validation->getErrors();
             }
         }
     }
 
     public function valid()
     {
+        // check both base class (if any) and child class validations
+        $validations = [];
+        $parentClass = get_parent_class(static::class);
         if (defined(sprintf("%s::VALIDATIONS", static::class))) {
-            foreach (static::VALIDATIONS as $field => $validations) {
-                // TODO: Implement more customizable validations
-                foreach ($validations as $key => $value ) {
-                    $type = null;
-                    $options = null;
-
-                    // check whether this validation has/supports options
-                    if (is_numeric($key)) {
-                        $type = $value;
-                    } else {
-                        $type = $key;
-                        $options = $value;
-                    }
-
-                    switch ($type) {
-                        case 'presence':
-                            $validation = new PresenceValidation($this, $field, $options);
-                            break;
-                        case 'email':
-                            $validation = new EmailValidation($this, $field, $options);
-                            break;
-                        case 'uniqueness':
-                            $validation = new UniquenessValidation($this, $field, $options);
-                            break;
-                        case 'inclusion':
-                            $validation = new InclusionValidation($this, $field, $options);
-                            break;
-                        case 'numeric':
-                            $validation = new NumericValidation($this, $field, $options);
-                            break;
-                        default:
-                            throw new InvalidArgumentException("No '$type' validation exists.", 1);
-                    }
-
-                    if ($validation->run() == false) {
-                        $this->validationErrors[$field][$type] = $validation->getErrors();
-                    }
-                }
+            $validations = static::VALIDATIONS;
+        }
+        if ($parentClass) {
+            if (defined(sprintf("%s::VALIDATIONS", $parentClass))) {
+                $validations = array_merge($validations, $parentClass::VALIDATIONS);
             }
+        }
+
+        foreach ($validations as $field => $validators) {
+            $this->runSingleValidation($field, $validators);
         }
 
         return empty($this->validationErrors);
@@ -230,6 +286,9 @@ class BaseModel
             if (isset($conditions)) {
                 foreach ($args["where"] as $field => $value) {
                     $statement->bindValue(sprintf(":$field"), $value);
+                }
+                foreach ($args["like"] as $field => $value) {
+                    $statement->bindValue(sprintf(":$field"), "%$value%");
                 }
             }
 
@@ -280,8 +339,15 @@ class BaseModel
     public static function create(Array $args)
     {
         try {
+            // sanitize the input so we don't get protected or private values
+            // overwritten
+            $args = static::sanitizeInput($args);
+
+            // create instance so we check for valid properties first
+            $obj = new static($args);
+
             // run validations
-            self::runValidations($args);
+            self::runValidations($obj);
 
             $db = DatabaseManager::getDbConnection();
 
@@ -334,8 +400,18 @@ class BaseModel
     public static function update($id, Array $args)
     {
         try {
+            // set the ID that we got from the first argument
+            $args['id'] = $id;
+
+            // sanitize the input so we don't get protected or private values
+            // overwritten
+            $args = static::sanitizeInput($args);
+
+            // create instance so we check for valid properties first
+            $obj = new static($args);
+
             // run validations
-            self::runValidations($args);
+            self::runValidations($obj);
 
             $db = DatabaseManager::getDbConnection();
 
@@ -388,7 +464,7 @@ class BaseModel
     {
         $args = get_object_vars($this);
         $savedObject = $this->isNew() ? static::create($args) : static::update($this->id, $args);
-        $this->assignAttributes((array)$savedObject);
+        $this->assignAttributes(get_object_vars($savedObject));
 
         return true;
     }
@@ -400,9 +476,9 @@ class BaseModel
 
             $query = null;
             if (defined(sprintf("%s::BASE_TABLE_NAME", static::class))) {
-                $query = sprintf("DELETE FROM %s WHERE id=:id", static::BASE_TABLE_NAME);
+                $query = sprintf("DELETE FROM %s WHERE id=:id;", static::BASE_TABLE_NAME);
             } else {
-                $query = sprintf("DELETE FROM %s WHERE id=:id", static::TABLE_NAME);
+                $query = sprintf("DELETE FROM %s WHERE id=:id;", static::TABLE_NAME);
             }
 
             $statement = $db->prepare($query);
