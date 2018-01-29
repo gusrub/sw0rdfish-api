@@ -20,46 +20,64 @@ class UniquenessValidation extends AbstractValidation
 	{
 		return parent::runValidation(function(){
 	        $uniquenessOptions = [
-	            "table"=>null,
-	            "field"=>null
+	            'table' => null,
+	            'field' => null,
+	            'caseSensitive' => null
 	        ];
+
+	        // set defaults if no options were given
+	        if (array_key_exists('table', $this->options) == false) {
+				$this->options['table'] = $this->object::TABLE_NAME;
+	        }
+	        if (array_key_exists('field', $this->options) == false) {
+				$this->options['field'] = $this->field;
+	        }
+			if (array_key_exists('caseSensitive', $this->options) == false) {
+				$this->options['caseSensitive'] = false;
+	        }
 
 	        // check that we got the right options
 	        $optionsDiff = array_diff_key($uniquenessOptions, $this->options);
 
-	        if (empty($optionsDiff) == false || empty($this->options)) {
+	        if (empty($optionsDiff) == false) {
 	            $error = sprintf(
-	                "Invalid options given for '%s' validation, required options are: '%s'",
+	                "Invalid options given for '%s' validation. Valid options are: '%s'",
 	                $this->type,
-	                implode(", ", ["table", "field"])
+	                implode(", ", ['table', 'field', 'caseSensitive'])
 	            );
 	            throw new InvalidArgumentException($error, 1);
 	        }
 
-	        $table = $this->options["table"];
-	        $field = $this->options["field"];
+	        $table = $this->options['table'];
+	        $field = $this->options['field'];
 
 	        $db = DatabaseManager::getDbConnection();
 
-	        $query = null;
-	        if (array_key_exists("caseSensitive", $this->options)) {
-	            if ($this->options["caseSensitive"] == true) {
-	                $query = sprintf(
-	                    "SELECT COUNT(%s) FROM %s WHERE LOWER(%s) = '%s'",
-	                    $field,
-	                    $table,
-	                    $field,
-	                    strtolower($this->object->{$this->field})
-	                );
-	            }
-	        } else {
+
+	        $idFilter = null;
+	        $id = $this->object->id;
+	        if ($id > 0) {
+				$idFilter = "AND id != $id";
+	        }
+
+			$query = null;
+            if ($this->options['caseSensitive'] == true) {
 	            $query = sprintf(
-	                "SELECT COUNT(%s) FROM %s WHERE %s = '%s'",
+	                "SELECT COUNT(%s) FROM %s WHERE %s = '%s' $idFilter",
 	                $field,
 	                $table,
 	                $field,
 	                $this->object->{$this->field}
 	            );
+            }
+            else {
+                $query = sprintf(
+                    "SELECT COUNT(%s) FROM %s WHERE LOWER(%s) = '%s' $idFilter",
+                    $field,
+                    $table,
+                    $field,
+                    strtolower($this->object->{$this->field})
+                );
 	        }
 
 	        $statement = $db->prepare($query);

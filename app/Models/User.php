@@ -8,29 +8,26 @@ namespace Sw0rdfish\Models;
 class User extends BaseModel
 {
 
-    const ROLES = ["admin", "user", "super"];
+    const ROLES = ['admin', 'user', 'super'];
     const TABLE_NAME = 'users';
     const VALIDATIONS = [
-        "id" => [
-            "numeric"
+        'firstName' => [
+            'presence'
         ],
-        "firstName" => [
-            "presence"
+        'lastName' => [
+            'presence'
         ],
-        "lastName" => [
-            "presence"
-        ],
-        "email" => [
-            "presence",
-            "email",
-            "uniqueness" => [
-                "table" => self::TABLE_NAME,
-                "field" => "email"
+        'email' => [
+            'presence',
+            'email',
+            'uniqueness' => [
+                'table' => self::TABLE_NAME,
+                'field' => 'email'
             ]
         ],
-        "role" => [
-            "presence",
-            "inclusion" => self::ROLES
+        'role' => [
+            'presence',
+            'inclusion' => self::ROLES
         ]
     ];
 
