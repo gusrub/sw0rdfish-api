@@ -19,11 +19,11 @@ pipelines:
           - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
           - composer install
           - echo "STARTING TESTS WITH sqlite"
-          - cat sw0rdfish-sqlite.sql | sqlite3 sw0rdfish_test.db3
+          - cat sw0rdfish-sqlite.sql | sqlite3 sw0rdfish.db3
           - export DB_DRIVER=sqlite
           - ./test.sh
           - echo "STARTING TESTS WITH MYSQL"
-          - mysql --host=127.0.0.1 --user=sw0rdfish_user --password=sw0rdfish_password sw0rdfish_test < sw0rdfish-mysql.sql
+          - mysql --host=127.0.0.1 --user=sw0rdfish_user --password=sw0rdfish_password sw0rdfish < sw0rdfish-mysql.sql
           - export DB_DRIVER=mysql
           - ./test.sh
 
@@ -34,7 +34,7 @@ definitions:
     mysql:
       image: mysql
       environment:
-        MYSQL_DATABASE: 'sw0rdfish_test'
+        MYSQL_DATABASE: 'sw0rdfish'
         MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
         MYSQL_USER: 'sw0rdfish_user'
         MYSQL_PASSWORD: 'sw0rdfish_password'
