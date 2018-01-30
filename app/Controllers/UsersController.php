@@ -24,8 +24,8 @@ class UsersController
   function index($request, $response, $args)
   {
     try {
-      $users = User::all();
-      return $response->withJson($users);
+      $pages = User::pages();
+      return $response->withJson(['pages'=>$pages]);
     } catch (ValidationException $e) {
       return $response->withJson($e->errors);
     }
