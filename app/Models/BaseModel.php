@@ -101,7 +101,9 @@ class BaseModel
                 }
             }
 
-            return sprintf("WHERE (%s)", implode(", ", $fields));
+            if (count($fields) > 0) {
+                return sprintf("WHERE (%s)", implode(", ", $fields));
+            }
         }
 
         return null;
@@ -248,6 +250,39 @@ class BaseModel
         return $this->validationErrors;
     }
 
+    public static function pages()
+    {
+        try {
+            $db = DatabaseManager::getDbConnection();
+
+            $query = null;
+            if (defined(sprintf("%s::BASE_TABLE_NAME", static::class))) {
+                $query = sprintf(
+                    "SELECT COUNT(*) FROM %s INNER JOIN %s ON %s.id=%s.id;",
+                    static::TABLE_NAME,
+                    static::BASE_TABLE_NAME,
+                    static::TABLE_NAME,
+                    static::BASE_TABLE_NAME
+                );
+            } else {
+                $query = sprintf(
+                    "SELECT COUNT(*) FROM %s;",
+                    static::TABLE_NAME
+                );
+            }
+
+            $statement = $db->prepare($query);
+            $statement->execute();
+            $recordCount = $statement->fetchColumn();
+            $result = ceil($recordCount / getenv("MAX_RECORDS_PER_PAGE"));
+
+            return $result;
+        } catch (\PDOException $e) {
+            $message = sprintf("Error while counting records from '%s'", static::TABLE_NAME);
+            throw new ModelException($message, $e);
+        }
+    }
+
     public static function all(Array $args = null)
     {
         try {
@@ -283,11 +318,13 @@ class BaseModel
             }
             $statement = $db->prepare($query);
 
-            if (isset($conditions)) {
-                foreach ($args["where"] as $field => $value) {
-                    $statement->bindValue(sprintf(":$field"), $value);
+            if (isset($conditions) && array_key_exists('where', $args)) {
+                foreach ($args['where'] as $field => $value) {
+                    $statement->bindValue(sprintf(":$field"), "$value");
                 }
-                foreach ($args["like"] as $field => $value) {
+            }
+            if (isset($conditions) && array_key_exists('like', $args)) {
+                foreach ($args['like'] as $field => $value) {
                     $statement->bindValue(sprintf(":$field"), "%$value%");
                 }
             }
