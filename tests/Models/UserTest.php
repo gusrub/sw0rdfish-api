@@ -12,20 +12,20 @@ use Sw0rdfish\Models\User as User;
 use Tests\Factories\UserFactory as UserFactory;
 
 /**
-*
+* Contains tests for the Sw0rdfish\Models\User model.
 */
 class UserTest extends BaseTestCase
 {
 
+	/** Defines an array of tables that should be cleaned before each test */
     const CLEANUP_TABLES = ['users', 'user_tokens', 'secrets'];
 
 	/**
 	 * Test that the model defines a table constant
 	 *
 	 * @return void
-	 * @author
 	 * @test
-	 **/
+	 */
 	function definesTableConstant()
 	{
 		$this->assertTrue(
@@ -38,12 +38,11 @@ class UserTest extends BaseTestCase
 	 * Test that firstName is present
 	 *
 	 * @return void
-	 * @author
 	 * @test
-	 **/
+	 */
 	function validatesPresenceOfFirstName()
 	{
-		$user = new User(['firstName'=>null]);
+		$user = UserFactory::build(['firstName'=>null]);
 		$this->assertFalse($user->valid());
 		$errors = $user->getValidationErrors();
 		$this->assertNotEmpty($errors);
@@ -55,12 +54,11 @@ class UserTest extends BaseTestCase
 	 * Test that lastName is present
 	 *
 	 * @return void
-	 * @author
 	 * @test
-	 **/
+	 */
 	function validatesPresenceOfLastName()
 	{
-		$user = new User(['lastName'=>null]);
+		$user = UserFactory::build(['lastName'=>null]);
 		$this->assertFalse($user->valid());
 		$errors = $user->getValidationErrors();
 		$this->assertNotEmpty($errors);
@@ -72,12 +70,11 @@ class UserTest extends BaseTestCase
 	 * Test that email is present
 	 *
 	 * @return void
-	 * @author
 	 * @test
-	 **/
+	 */
 	function validatesPresenceOfEmail()
 	{
-		$user = new User(['email'=>null]);
+		$user = UserFactory::build(['email'=>null]);
 		$this->assertFalse($user->valid());
 		$errors = $user->getValidationErrors();
 		$this->assertNotEmpty($errors);
@@ -89,12 +86,11 @@ class UserTest extends BaseTestCase
 	 * Test that email is a valid address
 	 *
 	 * @return void
-	 * @author
 	 * @test
-	 **/
+	 */
 	function validatesEmailFormat()
 	{
-		$user = new User(['email'=>'someone AT example.com']);
+		$user = UserFactory::build(['email'=>'someone AT example.com']);
 		$this->assertFalse($user->valid());
 		$errors = $user->getValidationErrors();
 		$this->assertNotEmpty($errors);
@@ -106,19 +102,18 @@ class UserTest extends BaseTestCase
 	 * Test that email is a valid address
 	 *
 	 * @return void
-	 * @author
 	 * @test
-	 **/
+	 */
 	function validatesEmailUniqueness()
 	{
-		$existingUser = User::create([
+		$existingUser = UserFactory::create([
 			'firstName' => 'John',
 			'lastName' => 'Wayne',
 			'email' => 'john@example.com',
 			'password' => 'password',
 			'role' => 'user'
 		]);
-		$user = new User(['email'=>'john@example.com']);
+		$user = UserFactory::build(['email'=>'john@example.com']);
 		$this->assertFalse($user->valid());
 		$errors = $user->getValidationErrors();
 		$this->assertNotEmpty($errors);
@@ -130,12 +125,11 @@ class UserTest extends BaseTestCase
 	 * Test that role is present
 	 *
 	 * @return void
-	 * @author
 	 * @test
-	 **/
+	 */
 	function validatesPresenceOfRole()
 	{
-		$user = new User(['role'=>null]);
+		$user = UserFactory::build(['role'=>null]);
 		$this->assertFalse($user->valid());
 		$errors = $user->getValidationErrors();
 		$this->assertNotEmpty($errors);
@@ -147,12 +141,11 @@ class UserTest extends BaseTestCase
 	 * Test that role is a valid value
 	 *
 	 * @return void
-	 * @author
 	 * @test
-	 **/
+	 */
 	function validatesInclusionOfRole()
 	{
-		$user = new User(['role'=>'invalid']);
+		$user = UserFactory::build(['role'=>'invalid']);
 		$this->assertFalse($user->valid());
 		$errors = $user->getValidationErrors();
 		$this->assertNotEmpty($errors);
@@ -164,9 +157,8 @@ class UserTest extends BaseTestCase
 	 * Test that a new user is created
 	 *
 	 * @return void
-	 * @author
 	 * @test
-	 **/
+	 */
 	function createNew()
 	{
 		$user = UserFactory::build();
@@ -179,9 +171,8 @@ class UserTest extends BaseTestCase
 	 * Test that an existing user is updated
 	 *
 	 * @return void
-	 * @author
 	 * @test
-	 **/
+	 */
 	function updateExisting()
 	{
 		$newParams = [
@@ -205,12 +196,24 @@ class UserTest extends BaseTestCase
 	}
 
 	/**
+	 * Test that an existing user is retrieved
+	 *
+	 * @return void
+	 * @test
+	 */
+	function get()
+	{
+		$user = UserFactory::create();
+		$user = User::get($user->id);
+		$this->assertNotEmpty($user);
+	}
+
+	/**
 	 * Test that all users are returned when using no filters
 	 *
 	 * @return void
-	 * @author
 	 * @test
-	 **/
+	 */
 	function listWithoutFilters()
 	{
 		UserFactory::createList(4);
@@ -223,9 +226,8 @@ class UserTest extends BaseTestCase
 	 * Test that all users that match where criteria are returned
 	 *
 	 * @return void
-	 * @author
 	 * @test
-	 **/
+	 */
 	function listWithWhereFilter()
 	{
 		$lastNames = ['Gallagher', 'Wayne', 'Gallagher'];
@@ -250,9 +252,8 @@ class UserTest extends BaseTestCase
 	 * Test that all users that match like criteria are returned
 	 *
 	 * @return void
-	 * @author
 	 * @test
-	 **/
+	 */
 	function listWithLikeFilter()
 	{
 		$lastNames = ['Gallagher', 'Wayne', 'Gallagher'];
@@ -278,9 +279,8 @@ class UserTest extends BaseTestCase
 	 * Test that only paginated records are returned
 	 *
 	 * @return void
-	 * @author
 	 * @test
-	 **/
+	 */
 	function listWithPagination()
 	{
 		putenv("MAX_RECORDS_PER_PAGE=5");
@@ -303,9 +303,8 @@ class UserTest extends BaseTestCase
 	 * Test that only records are properly sorted
 	 *
 	 * @return void
-	 * @author
 	 * @test
-	 **/
+	 */
 	function listWithSorting()
 	{
 		$lastNames = ['Andrews', 'Berry', 'Clark'];
@@ -329,9 +328,8 @@ class UserTest extends BaseTestCase
 	 * Test that a user is succesfully deleted
 	 *
 	 * @return void
-	 * @author
 	 * @test
-	 **/
+	 */
 	function deleteExisting()
 	{
 		$user = UserFactory::create();

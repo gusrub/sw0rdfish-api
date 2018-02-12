@@ -7,51 +7,23 @@ use Sw0rdfish\Models\User as User;
 
 class UserFactory
 {
+    use GenericFactoryTrait;
 
-    public static function build(Array $args = null)
-    {
-        $user = new User(self::generateArguments($args));
-        return $user;
-    }
-
-    public static function create(Array $args = null)
-    {
-        $user = User::create(self::generateArguments($args));
-        return $user;
-    }
-
-    public static function buildList($amount)
-    {
-        $users = [];
-
-        while (count($users) < $amount) {
-            array_push($users, self::create());
-        }
-
-        return $users;
-    }
-
-    public static function createList($amount)
-    {
-        $users = [];
-
-        while (count($users) < $amount) {
-            array_push($users, self::create());
-        }
-
-        return $users;
-    }
+    const MODEL_NAME = 'Sw0rdfish\Models\User';
 
     private static function generateArguments(Array $args = null)
     {
+        if (is_null($args)) {
+            $args = [];
+        }
         $faker = Factory::create();
 
         return [
-            'firstName' => $args['firstName'] ?? $faker->firstName,
-            'lastName' => $args['lastName'] ?? $faker->lastName,
-            'email' => $args['email'] ?? $faker->safeEmail,
-            'password' => $args['password'] ?? $faker->password,
-            'role' => $args['role'] ?? User::ROLES[array_rand(User::ROLES)]
+            'firstName' =>  array_key_exists('firstName', $args) ? $args['firstName'] : $faker->firstName,
+            'lastName' => array_key_exists('lastName', $args) ? $args['lastName'] : $faker->lastName,
+            'email' => array_key_exists('email', $args) ? $args['email'] : $faker->safeEmail,
+            'password' => array_key_exists('password', $args) ? $args['password'] : $faker->password,
+            'role' => array_key_exists('role', $args) ? $args['role'] : User::ROLES[array_rand(User::ROLES)]
         ];
     }
 }
