@@ -53,7 +53,7 @@ class NumericValidation extends AbstractValidation
                 $lessThanOrEqual = $this->options["lessThanOrEqual"];
             }
 
-            if ($greaterThan && $lessThan) {
+            if (isset($greaterThan) && isset($lessThan)) {
                 if ($greaterThan >= $lessThan) {
                     $error = sprintf(
                         "Invalid options given for '%s' validation: '$greaterThan' cannot be greater or equal than '$lessThan' ",
@@ -63,7 +63,7 @@ class NumericValidation extends AbstractValidation
                 }
             }
 
-            if ($greaterThan && $lessThanOrEqual) {
+            if (isset($greaterThan) && isset($lessThanOrEqual)) {
                 if ($greaterThan >= $lessThanOrEqual) {
                     $error = sprintf(
                         "Invalid options given for '%s' validation: '$greaterThan' cannot be greater than '$lessThanOrEqual' ",
@@ -73,7 +73,7 @@ class NumericValidation extends AbstractValidation
                 }
             }
 
-            if ($greaterThanOrEqual && $lessThan) {
+            if (isset($greaterThanOrEqual) && isset($lessThan)) {
                 if ($greaterThanOrEqual >= $lessThan) {
                     $error = sprintf(
                         "Invalid options given for '%s' validation: '$greaterThanOrEqual' cannot be greater than '$lessThan' ",
@@ -83,7 +83,7 @@ class NumericValidation extends AbstractValidation
                 }
             }
 
-            if ($greaterThanOrEqual && $lessThanOrEqual) {
+            if (isset($greaterThanOrEqual) && isset($lessThanOrEqual)) {
                 if ($greaterThanOrEqual > $lessThanOrEqual) {
                     $error = sprintf(
                         "Invalid options given for '%s' validation: '$greaterThanOrEqual' cannot be greater or equal than '$lessThanOrEqual' ",
@@ -103,19 +103,19 @@ class NumericValidation extends AbstractValidation
                 return;
             }
 
-            if ($greaterThan && ($value <= $greaterThan)) {
+            if (isset($greaterThan) && ($value <= $greaterThan)) {
                 array_push($this->errors, "must be greater than '$greaterThan' ");
             }
 
-            if ($greaterThanOrEqual && ($value < $greaterThanOrEqual)) {
+            if (isset($greaterThanOrEqual) && ($value < $greaterThanOrEqual)) {
                 array_push($this->errors, "must be greater than or equal to '$greaterThanOrEqual' ");
             }
 
-            if ($lessThan && ($value >= $lessThan)) {
+            if (isset($lessThan) && ($value >= $lessThan)) {
                 array_push($this->errors, "must be less than '$lessThan' ");
             }
 
-            if ($lessThanOrEqual && ($value > $lessThanOrEqual)) {
+            if (isset($lessThanOrEqual) && ($value > $lessThanOrEqual)) {
                 array_push($this->errors, "must be less than or equal to '$lessThanOrEqual' ");
             }
 

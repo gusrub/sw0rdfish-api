@@ -3,6 +3,7 @@
 namespace Sw0rdfish\Controllers;
 
 use Sw0rdfish\Models\User as User;
+use Sw0rdfish\Models\UserToken as UserToken;
 use Sw0rdfish\Models\Secret as Secret;
 use Sw0rdfish\Models\CreditCardSecret as CreditCardSecret;
 use Sw0rdfish\Models\ModelException as ModelException;
@@ -24,8 +25,8 @@ class UsersController
   function index($request, $response, $args)
   {
     try {
-      $pages = User::pages();
-      return $response->withJson(['pages'=>$pages]);
+      $token = new UserToken();
+      return $response->withJson($token);
     } catch (ValidationException $e) {
       return $response->withJson($e->errors);
     }

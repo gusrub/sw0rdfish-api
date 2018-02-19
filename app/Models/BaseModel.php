@@ -11,12 +11,16 @@ use Sw0rdfish\Models\Validators\NumericValidation as NumericValidation;
 use Sw0rdfish\Models\Validators\UniquenessValidation as UniquenessValidation;
 
 /**
-*
+* Base class that all other models inherit from.
 */
 class BaseModel
 {
 
     public $id;
+
+    /**
+     * @var string Date of the creation of this record.
+     */
     public $createdDate;
     public $updatedDate;
     private $validationErrors = [];
@@ -445,14 +449,17 @@ class BaseModel
             $args = static::sanitizeInput($args);
 
             // create instance so we check for valid properties first
-            $obj = new static($args);
+            $obj = static::get($id);
+            foreach ($args as $key => $value) {
+                $obj->{$key} = $value;
+            }
 
             // run validations
             self::runValidations($obj);
 
             $db = DatabaseManager::getDbConnection();
 
-            // Set the update date and unser the ID if any
+            // Set the update date and unset the ID if any
             $args["updatedDate"] = date('Y-m-d H:i:s');
             unset($args["id"]);
             unset($args["createdDate"]);
