@@ -19,11 +19,20 @@ class Secret extends BaseModel
             ]
         ],
         'category' => [
-            'presence'
+            'presence',
+            'inclusion' => [
+                'bank_account_secret',
+                'credit_card_secret',
+                'email_secret',
+                'generic_secret',
+                'website_credential_secret'
+            ]
         ],
         'userId' => [
             'presence',
-            'numeric'
+            'numeric' => [
+                'greaterThan' => 0
+            ]
         ]
     ];
 

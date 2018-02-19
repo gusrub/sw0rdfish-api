@@ -11,7 +11,7 @@ class UserFactory
 
     const MODEL_NAME = 'Sw0rdfish\Models\User';
 
-    private static function generateArguments(Array $args = null)
+    private static function generateArguments(Array $args = null, $sequence = null)
     {
         if (is_null($args)) {
             $args = [];
