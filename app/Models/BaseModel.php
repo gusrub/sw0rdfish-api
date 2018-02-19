@@ -47,13 +47,16 @@ class BaseModel
 
     protected static function allowedOrderField(Array $args = null)
     {
+        $orderField = sprintf("%s.id", static::TABLE_NAME);
+
         if (isset($args) && array_key_exists("orderBy", $args)) {
-            if (property_exists(static::class, $args["orderBy"])) {
-                return $args["orderBy"];
+            if (property_exists(static::class, $args["orderBy"])
+                && strtolower($args['orderBy']) != 'id') {
+                $orderField = $args["orderBy"];
             }
         }
 
-        return sprintf("%s.id", static::TABLE_NAME);
+        return $orderField;
     }
 
     protected static function allowedSortDirection(Array $args = null)
