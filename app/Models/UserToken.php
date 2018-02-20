@@ -1,7 +1,8 @@
 <?php
 
 /**
- * @package Sw0rdfish\Models Contains classes that represent data models to interact with the database.
+ * @package Sw0rdfish\Models Contains classes that represent data models to
+ *  interact with the database.
  */
 namespace Sw0rdfish\Models;
 

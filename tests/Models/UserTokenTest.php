@@ -18,7 +18,9 @@ use Tests\Factories\UserTokenFactory as UserTokenFactory;
 class UserTokenTest extends BaseTestCase
 {
 
-    /** Defines an array of tables that should be cleaned before each test */
+    /**
+     * Defines an array of tables that should be cleaned before each test
+     */
     const CLEANUP_TABLES = ['users', 'user_tokens'];
 
     /**
@@ -183,7 +185,11 @@ class UserTokenTest extends BaseTestCase
     function listWithoutFilters()
     {
         $user = UserFactory::create();
-        $tokens = UserTokenFactory::createList(4, ['userId'=>$user->id]);
+        $tokens = UserTokenFactory::createList(
+            4,
+            ['userId'=>$user->id],
+            true
+        );
         $tokens = UserToken::all();
         $this->assertNotEmpty($tokens);
         $this->assertEquals(4, count($tokens));
@@ -198,7 +204,11 @@ class UserTokenTest extends BaseTestCase
     function listWithWhereFilter()
     {
         $userId = UserFactory::create()->id;
-        $tokens = UserTokenFactory::createList(4, ['userId'=>$userId]);
+        $tokens = UserTokenFactory::createList(
+            4,
+            ['userId'=>$userId],
+            true
+        );
 
         $tokens = UserToken::all([
             'where' => [
@@ -224,14 +234,16 @@ class UserTokenTest extends BaseTestCase
             [
                 'type' => 'session',
                 'userId'=> $userId
-            ]
+            ],
+            true
         );
         $tokens = UserTokenFactory::createList(
             1,
             [
                 'type' => 'email_confirmation',
                 'userId'=> $userId
-            ]
+            ],
+            true
         );
 
         $tokens = UserToken::all([
@@ -254,7 +266,7 @@ class UserTokenTest extends BaseTestCase
     {
         putenv("MAX_RECORDS_PER_PAGE=5");
         $userId = UserFactory::create()->id;
-        UserTokenFactory::createList(7, ['userId'=>$userId]);
+        UserTokenFactory::createList(7, ['userId'=>$userId], true);
 
         $tokens = UserToken::all([
             'page' => 1
@@ -270,7 +282,7 @@ class UserTokenTest extends BaseTestCase
     }
 
     /**
-     * Test that only records are properly sorted
+     * Test that records are properly sorted
      *
      * @return void
      * @test
@@ -278,7 +290,7 @@ class UserTokenTest extends BaseTestCase
     function listWithSorting()
     {
         $userId = UserFactory::create()->id;
-        $tokens = UserTokenFactory::createList(4, ['userId'=>$userId]);
+        $tokens = UserTokenFactory::createList(4, ['userId'=>$userId], true);
 
         $tokens = UserToken::all([
             'orderBy' => 'id',
