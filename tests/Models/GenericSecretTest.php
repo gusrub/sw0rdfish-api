@@ -85,7 +85,7 @@ class GenericSecretTest extends BaseTestCase
     }
 
     /**
-     * Test that secret is present
+     * Test that name is present
      *
      * @return void
      * @test
@@ -114,7 +114,8 @@ class GenericSecretTest extends BaseTestCase
             'userId' => $user->id
         ]);
         $secret = GenericSecretFactory::build([
-            'name' => 'Test Generic Secret'
+            'name' => 'Test Generic Secret',
+            'userId' => $user->id
         ]);
         $this->assertFalse($secret->valid());
         $errors = $secret->getValidationErrors();

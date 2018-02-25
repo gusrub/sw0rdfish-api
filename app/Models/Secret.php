@@ -15,7 +15,8 @@ class Secret extends BaseModel
         'name' => [
             'presence',
             'uniqueness' => [
-                'table' => self::TABLE_NAME
+                'table' => self::TABLE_NAME,
+                'scope' => 'userId'
             ]
         ],
         'category' => [
