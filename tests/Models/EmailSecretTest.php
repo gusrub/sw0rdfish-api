@@ -7,20 +7,20 @@ use Slim\Http\Environment;
 use Slim\Http\Request;
 use Sw0rdfish\Application as Application;
 use Sw0rdfish\Models\DatabaseManager as DatabaseManager;
-use Sw0rdfish\Models\BankAccountSecret as BankAccountSecret;
+use Sw0rdfish\Models\EmailSecret as EmailSecret;
 use Tests\Models\BaseTestCase;
 use Tests\Factories\UserFactory as UserFactory;
-use Tests\Factories\BankAccountSecretFactory as BankAccountSecretFactory;
+use Tests\Factories\EmailSecretFactory as EmailSecretFactory;
 
 /**
-* Contains tests for the Sw0rdfish\Models\BankAccountSecret model.
+* Contains tests for the Sw0rdfish\Models\EmailSecret model.
 */
-class BankAccountSecretTest extends BaseTestCase
+class EmailSecretTest extends BaseTestCase
 {
     /**
      * Defines an array of tables that should be cleaned before each test
      */
-    const CLEANUP_TABLES = ['users', 'secrets', 'bank_account_secrets'];
+    const CLEANUP_TABLES = ['users', 'secrets', 'email_secrets'];
 
     /**
      * Test that the model defines a table constant
@@ -31,8 +31,8 @@ class BankAccountSecretTest extends BaseTestCase
     function definesTableConstant()
     {
         $this->assertTrue(
-            defined('Sw0rdfish\Models\BankAccountSecret::TABLE_NAME'),
-            'BankAccountSecret has a TABLE_NAME constant defined'
+            defined('Sw0rdfish\Models\EmailSecret::TABLE_NAME'),
+            'EmailSecret has a TABLE_NAME constant defined'
         );
     }
 
@@ -44,7 +44,7 @@ class BankAccountSecretTest extends BaseTestCase
      */
     function validatesPresenceOfUserId()
     {
-        $secret = BankAccountSecretFactory::build(['userId'=>null]);
+        $secret = EmailSecretFactory::build(['userId'=>null]);
         $this->assertFalse($secret->valid());
         $errors = $secret->getValidationErrors();
         $this->assertNotEmpty($errors);
@@ -60,7 +60,7 @@ class BankAccountSecretTest extends BaseTestCase
      */
     function validatesNumericalityOfUserId()
     {
-        $secret = BankAccountSecretFactory::build(['userId'=>'invalid']);
+        $secret = EmailSecretFactory::build(['userId'=>'invalid']);
         $this->assertFalse($secret->valid());
         $errors = $secret->getValidationErrors();
         $this->assertNotEmpty($errors);
@@ -76,7 +76,7 @@ class BankAccountSecretTest extends BaseTestCase
      */
     function validatesPositivityOfUserId()
     {
-        $secret = BankAccountSecretFactory::build(['userId'=>-15]);
+        $secret = EmailSecretFactory::build(['userId'=>-15]);
         $this->assertFalse($secret->valid());
         $errors = $secret->getValidationErrors();
         $this->assertNotEmpty($errors);
@@ -92,7 +92,7 @@ class BankAccountSecretTest extends BaseTestCase
      */
     function validatesPresenceOfName()
     {
-        $secret = BankAccountSecretFactory::build(['name'=>null]);
+        $secret = EmailSecretFactory::build(['name'=>null]);
         $this->assertFalse($secret->valid());
         $errors = $secret->getValidationErrors();
         $this->assertNotEmpty($errors);
@@ -109,12 +109,12 @@ class BankAccountSecretTest extends BaseTestCase
     function validatesUniquenessOfName()
     {
         $user = UserFactory::create();
-        BankAccountSecretFactory::create([
-            'name' => 'Test Bank Account Secret',
+        EmailSecretFactory::create([
+            'name' => 'Test Email Secret',
             'userId' => $user->id
         ]);
-        $secret = BankAccountSecretFactory::build([
-            'name' => 'Test Bank Account Secret',
+        $secret = EmailSecretFactory::build([
+            'name' => 'Test Email Secret',
             'userId' => $user->id
         ]);
         $this->assertFalse($secret->valid());
@@ -132,7 +132,7 @@ class BankAccountSecretTest extends BaseTestCase
      */
     function validatesPresenceOfCategory()
     {
-        $secret = BankAccountSecretFactory::build([
+        $secret = EmailSecretFactory::build([
             'category' => null
         ]);
         $this->assertFalse($secret->valid());
@@ -150,7 +150,7 @@ class BankAccountSecretTest extends BaseTestCase
      */
     function validatesInclusionOfCategory()
     {
-        $secret = BankAccountSecretFactory::build([
+        $secret = EmailSecretFactory::build([
             'category' => 'invalid'
         ]);
         $this->assertFalse($secret->valid());
@@ -161,23 +161,39 @@ class BankAccountSecretTest extends BaseTestCase
     }
 
     /**
-     * Test that accountNumber is present
+     * Test that email is present
      *
      * @return void
      * @test
      */
-    function validatesPresenceOfAccountNumber()
+    function validatesPresenceOfEmail()
     {
-        $secret = BankAccountSecretFactory::build(['accountNumber'=>null]);
+        $secret = EmailSecretFactory::build(['email'=>null]);
         $this->assertFalse($secret->valid());
         $errors = $secret->getValidationErrors();
         $this->assertNotEmpty($errors);
-        $this->assertArrayHasKey('accountNumber', $errors);
-        $this->assertArrayHasKey('presence', $errors['accountNumber']);
+        $this->assertArrayHasKey('email', $errors);
+        $this->assertArrayHasKey('presence', $errors['email']);
     }
 
     /**
-     * Test that a new bank account secret is created
+     * Test that password is present
+     *
+     * @return void
+     * @test
+     */
+    function validatesPresenceOfPassword()
+    {
+        $secret = EmailSecretFactory::build(['password'=>null]);
+        $this->assertFalse($secret->valid());
+        $errors = $secret->getValidationErrors();
+        $this->assertNotEmpty($errors);
+        $this->assertArrayHasKey('password', $errors);
+        $this->assertArrayHasKey('presence', $errors['password']);
+    }
+
+    /**
+     * Test that a new email secret is created
      *
      * @return void
      * @test
@@ -185,14 +201,14 @@ class BankAccountSecretTest extends BaseTestCase
     function createNew()
     {
         $user = UserFactory::create();
-        $secret = BankAccountSecretFactory::build(['userId'=>$user->id]);
+        $secret = EmailSecretFactory::build(['userId'=>$user->id]);
         $this->assertTrue($secret->valid());
         $secret->save();
         $this->assertNotEmpty($secret->id);
     }
 
     /**
-     * Test that an existing bank account secret is retrieved
+     * Test that an existing email secret is retrieved
      *
      * @return void
      * @test
@@ -200,13 +216,13 @@ class BankAccountSecretTest extends BaseTestCase
     function get()
     {
         $user = UserFactory::create();
-        $secret = BankAccountSecretFactory::create(['userId'=>$user->id]);
-        $secret = BankAccountSecret::get($secret->id);
+        $secret = EmailSecretFactory::create(['userId'=>$user->id]);
+        $secret = EmailSecret::get($secret->id);
         $this->assertNotEmpty($secret);
     }
 
     /**
-     * Test that a bank account secret is successfully deleted
+     * Test that an email secret is successfully deleted
      *
      * @return void
      * @test
@@ -214,13 +230,13 @@ class BankAccountSecretTest extends BaseTestCase
     function deleteExisting()
     {
         $user = UserFactory::create();
-        $secret = BankAccountSecretFactory::create(['userId'=>$user->id]);
+        $secret = EmailSecretFactory::create(['userId'=>$user->id]);
         $this->assertTrue($secret->delete());
-        $this->assertEmpty(BankAccountSecret::get($secret->id));
+        $this->assertEmpty(EmailSecret::get($secret->id));
     }
 
     /**
-     * Test that all bank account secrets are returned when using no filters
+     * Test that all email secrets are returned when using no filters
      *
      * @return void
      * @test
@@ -228,18 +244,18 @@ class BankAccountSecretTest extends BaseTestCase
     function listWithoutFilters()
     {
         $user = UserFactory::create();
-        $secrets = BankAccountSecretFactory::createList(
+        $secrets = EmailSecretFactory::createList(
             4,
             ['userId'=>$user->id],
             true
         );
-        $secrets = BankAccountSecret::all();
+        $secrets = EmailSecret::all();
         $this->assertNotEmpty($secrets);
         $this->assertEquals(4, count($secrets));
     }
 
     /**
-     * Test that all bank account secrets that match where criteria are returned
+     * Test that all email secrets that match where criteria are returned
      *
      * @return void
      * @test
@@ -247,13 +263,13 @@ class BankAccountSecretTest extends BaseTestCase
     function listWithWhereFilter()
     {
         $userId = UserFactory::create()->id;
-        $secrets = BankAccountSecretFactory::createList(
+        $secrets = EmailSecretFactory::createList(
             4,
             ['userId'=>$userId],
             true
         );
 
-        $secrets = BankAccountSecret::all([
+        $secrets = EmailSecret::all([
             'where' => [
                 'userId' => $userId
             ]
@@ -264,7 +280,7 @@ class BankAccountSecretTest extends BaseTestCase
     }
 
     /**
-     * Test that all bank account secrets that match like criteria are returned
+     * Test that all email secrets that match like criteria are returned
      *
      * @return void
      * @test
@@ -272,7 +288,7 @@ class BankAccountSecretTest extends BaseTestCase
     function listWithLikeFilter()
     {
         $userId = UserFactory::create()->id;
-        $secrets = BankAccountSecretFactory::createList(
+        $secrets = EmailSecretFactory::createList(
             2,
             [
                 'description' => 'desc1',
@@ -280,7 +296,7 @@ class BankAccountSecretTest extends BaseTestCase
             ],
             true
         );
-        $secrets = BankAccountSecretFactory::createList(
+        $secrets = EmailSecretFactory::createList(
             2,
             [
                 'description' => 'desc2',
@@ -289,7 +305,7 @@ class BankAccountSecretTest extends BaseTestCase
             true
         );
 
-        $secrets = BankAccountSecret::all([
+        $secrets = EmailSecret::all([
             'like' => [
                 'description' => 'desc1'
             ]
@@ -309,15 +325,15 @@ class BankAccountSecretTest extends BaseTestCase
     {
         putenv("MAX_RECORDS_PER_PAGE=5");
         $userId = UserFactory::create()->id;
-        BankAccountSecretFactory::createList(7, ['userId'=>$userId], true);
+        EmailSecretFactory::createList(7, ['userId'=>$userId], true);
 
-        $secrets = BankAccountSecret::all([
+        $secrets = EmailSecret::all([
             'page' => 1
         ]);
         $this->assertNotEmpty($secrets);
         $this->assertEquals(5, count($secrets));
 
-        $secrets = BankAccountSecret::all([
+        $secrets = EmailSecret::all([
             'page' => 2
         ]);
         $this->assertNotEmpty($secrets);
@@ -333,9 +349,9 @@ class BankAccountSecretTest extends BaseTestCase
     function listWithSorting()
     {
         $userId = UserFactory::create()->id;
-        $secrets = BankAccountSecretFactory::createList(4, ['userId'=>$userId], true);
+        $secrets = EmailSecretFactory::createList(4, ['userId'=>$userId], true);
 
-        $secrets = BankAccountSecret::all([
+        $secrets = EmailSecret::all([
             'orderBy' => 'id',
             'sort' => 'desc'
         ]);
