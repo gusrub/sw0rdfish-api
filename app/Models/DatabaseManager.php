@@ -1,17 +1,29 @@
 <?php
 
+/**
+ * @package Sw0rdfish\Models Contains classes that represent data models to
+ *  interact with the database.
+ */
 namespace Sw0rdfish\Models;
 
 /**
-*
-*/
+ * This class contains the core functionality to connect to the database and
+ * execute PDO statements.
+ */
 class DatabaseManager
 {
 
+    /**
+     * Defines any SQLite pragmas to be set before each connection.
+     */
     const SQLITE_PRAGMAS = [
         'foreign_keys' => 'ON'
     ];
 
+    /**
+     * Gets a PDO connection object based on the db driver configuration set
+     * on the application.
+     */
     public static function getDbConnection()
     {
         $dbDriver = getenv("DB_DRIVER");
@@ -33,6 +45,13 @@ class DatabaseManager
         return $db;
     }
 
+    /**
+     * Generates a truncation SQL statement to remove all records from a table
+     * depending based on the db driver configuration set on the application.
+     *
+     * @param string $table The table name that will be truncated.
+     * @return string The truncation query.
+     */
     public static function getTruncateQuery($table)
     {
         $dbDriver = getenv("DB_DRIVER");
@@ -57,6 +76,11 @@ class DatabaseManager
         return $query;
     }
 
+    /**
+     * Returns a PDO connection object for MySql ready to be used.
+     *
+     * @return \PDO A PDO connection object for MySql
+     */
     private static function getMySqlConnection()
     {
         $dbHost = getenv("DB_HOST");
@@ -67,6 +91,11 @@ class DatabaseManager
         return new \PDO("mysql:host=$dbHost;dbname=$dbName", $dbUser, $dbPassword);
     }
 
+    /**
+     * Returns a PDO connection object for SQLite ready to be used.
+     *
+     * @return \PDO A PDO connection object for SQLIte
+     */
     private static function getSQLiteConnection()
     {
         $dbName = getenv("DB_NAME");

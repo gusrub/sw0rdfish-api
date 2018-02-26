@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @package Sw0rdfish\Models Contains classes that represent data models to
+ *  interact with the database.
+ */
 namespace Sw0rdfish\Models;
 
 use Sw0rdfish\Models\ModelException as ModelException;
@@ -11,22 +15,47 @@ use Sw0rdfish\Models\Validators\NumericValidation as NumericValidation;
 use Sw0rdfish\Models\Validators\UniquenessValidation as UniquenessValidation;
 
 /**
-* Base class that all other models inherit from.
+* Base class that all other models inherit from. This class contains generic
+* functionality to execute CRUD (Create-Read-Update-Delete) operations as well
+* as other basic functionality such as filtering, listing, etc.
 */
 class BaseModel
 {
 
+    /**
+     * @var string int The ID for this record.
+     */
     public $id;
 
     /**
      * @var string Date of the creation of this record.
      */
     public $createdDate;
+
+    /**
+     * @var string Date of the creation of this record.
+     */
     public $updatedDate;
+
+    /**
+     * @var Array A list of validation errors for this model.
+     */
     private $validationErrors = [];
 
+    /**
+     * Defines the allowed keywords to do sorting.
+     */
     const SORT_KEYWORDS = ["ASC", "DESC"];
 
+    /**
+     * Creates a new instance for the model with the given arguments. Please
+     * note that not all properties are going to be assigned, only those which
+     * are public, for security reasons.
+     *
+     * @param Array $args An array with key-value pairs for the properties to
+     * initialize this object with.
+     * @return BaseModel A new instance of this object.
+     */
     public function __construct(Array $args = null)
     {
         if($args !== null) {
@@ -34,6 +63,13 @@ class BaseModel
         }
     }
 
+    /**
+     * Generates a merged array of bound parameters formatted do be used by the
+     * PDO class.
+     *
+     * @param Array $args An array containing key-value pairs of the parameters.
+     * @return Array An array with formatted values to be used by PDO.
+     */
     protected static function generateBoundParams(Array $args)
     {
         $paramKeys = array_keys($args);
@@ -45,6 +81,13 @@ class BaseModel
         return array_combine($paramKeys, $paramValues);
     }
 
+    /**
+     * Generates a string with the order statement by using the indicated field
+     * if its exists or a default field if it does not.
+     *
+     * @param Array $args An array with parameters to do the ordering.
+     * @return string The order statement string.
+     */
     protected static function allowedOrderField(Array $args = null)
     {
         $orderField = sprintf("%s.id", static::TABLE_NAME);
@@ -59,6 +102,13 @@ class BaseModel
         return $orderField;
     }
 
+    /**
+     * Generates a string with the sort direction statement by using the
+     * indicated sort keyword if its allowed or a default field if it does not.
+     *
+     * @param Array $args An array with parameters to do the sorting.
+     * @return string The sort statement string.
+     */
     protected static function allowedSortDirection(Array $args = null)
     {
         if (isset($args) && array_key_exists("sort", $args)) {
@@ -70,6 +120,14 @@ class BaseModel
         return self::SORT_KEYWORDS[0];
     }
 
+    /**
+     * Generates a string with the limit and offset (paging) by using the
+     * passed options. If none are given `null` will be returned meaning we are
+     * doing no pagination.
+     *
+     * @param Array $args An array with parameters to do the paging.
+     * @return string|null The paging statement string.
+     */
     protected static function generateLimitAndOffset(Array $args = null)
     {
         if (isset($args) && array_key_exists("page", $args)) {
@@ -82,6 +140,15 @@ class BaseModel
         return null;
     }
 
+    /**
+     * Generates a string with the conditions that will be used for filtering
+     * records. If no conditions are given `null` will be returned. Two types of
+     * filters can be passed as arguments in the array of options: `where` which
+     * will match exactly the value of `like` which will match parts of it.
+     *
+     * @param Array $args An array with parameters to do the filtering.
+     * @return string|null The filtering criteria statement string.
+     */
     protected static function generateConditions(Array $args = null)
     {
         if (isset($args)) {
@@ -116,6 +183,15 @@ class BaseModel
         return null;
     }
 
+    /**
+     * Generates an array with the names of the columns that will be used on the
+     * operation by matchin them with the property names passed in the
+     * arguments. If the class has inheritance it will also generated the column
+     * names for the parent class or model.
+     *
+     * @param Array $args An array with names of the properties.
+     * @return Array An array containing all the targets for the operation.
+     */
     protected static function getTableTargets(Array $args)
     {
         $targets = [];
@@ -135,11 +211,24 @@ class BaseModel
         return $targets;
     }
 
+    /**
+     * Gets a friendly name for the model.
+     *
+     * @return string A friendly name for the model.
+     */
     protected static function getShortName()
     {
         return strtoupper(preg_replace('/(?<!^)[A-Z]/', '_$0', (new \ReflectionClass(new static))->getShortName()));
     }
 
+    /**
+     * Executes all validations defined in the model. Will throw a
+     * \ValidationException whenever any of them fail.
+     *
+     * @param object $obj The object where the validations need to be run
+     * against.
+     * @return null
+     */
     private static function runValidations($obj)
     {
         if ($obj->valid() == false) {
@@ -149,6 +238,15 @@ class BaseModel
         }
     }
 
+    /**
+     * Checks the given arguments for an operation and sanitizes it based on
+     * whether the given properties are public or not. It returnes only those
+     * which are considered safe.
+     *
+     * @param Array $args An array with the input for the operation.
+     * @return Array A sanitized or cleaned-up array with key-value pairs of
+     * properties which are allowed to be used.
+     */
     private static function sanitizeInput(Array $args)
     {
         $sanitizedInput = [];
@@ -170,6 +268,15 @@ class BaseModel
         return $sanitizedInput;
     }
 
+    /**
+     * Assigns the received input from user arguments to the object properties.
+     * Only those properties which are public can be set, anything else will
+     * cause a \ModelException.
+     *
+     * @param Array $args An array with key-value pairs of the properties to be
+     * set
+     * @return null
+     */
     private function assignAttributes(Array $args)
     {
         foreach ($args as $key => $value) {
@@ -190,9 +297,17 @@ class BaseModel
         }
     }
 
+    /**
+     * Runs a single validation for a model.
+     *
+     * @param string $field The field or property of this model that will be
+     * validated.
+     * @param Array $validators An array containing the different validations
+     * and their options to be run against the designated field.
+     * @return null
+     */
     private function runSingleValidation($field, $validators)
     {
-        // TODO: Implement more customizable validations
         foreach ($validators as $key => $value ) {
             $type = null;
             $options = null;
@@ -231,6 +346,11 @@ class BaseModel
         }
     }
 
+    /**
+     * Checks whether this model is valid.
+     *
+     * @return boolean Whether this model is valid or not.
+     */
     public function valid()
     {
         // check both base class (if any) and child class validations
@@ -252,11 +372,22 @@ class BaseModel
         return empty($this->validationErrors);
     }
 
+    /**
+     * Gets the validation error messages for this model.
+     *
+     * @return Array The validation error messages.
+     */
     public function getValidationErrors()
     {
         return $this->validationErrors;
     }
 
+    /**
+     * Returns the total pages that this model has based on the
+     * `MAX_RECORDS_PER_PAGE` environment variable.
+     *
+     * @return int The number of pages that this model has
+     */
     public static function pages()
     {
         try {
@@ -290,6 +421,21 @@ class BaseModel
         }
     }
 
+    /**
+     * Lists the records for this model. If no arguments are given it will
+     * return all the records from the first page. An array with options can be
+     * passed with the folllowing:
+     *
+     * `orderBy` - A string with a name of a property that will be used for sorting
+     * `sort` - The direction of the ordering for the field.
+     * `page` - The number of page of the pagination.
+     * `conditions` - An array of where/like conditions to be used to filter.
+     *
+     * Any of the above options can be combined.
+     *
+     * @param Array $args The options to do the listing.
+     * @return Array An array of objects of the model if any match the criteria.
+     */
     public static function all(Array $args = null)
     {
         try {
@@ -345,6 +491,12 @@ class BaseModel
         }
     }
 
+    /**
+     * Gets a single record from the database for this model by the given ID.
+     *
+     * @param int $id The ID of the record to retrieve.
+     * @return \BaseModel A record representing this model.
+     */
     public static function get($id)
     {
         try {
@@ -380,6 +532,15 @@ class BaseModel
         }
     }
 
+    /**
+     * Creates a new record of this model type with the given arguments. All
+     * model validations will be executed before creation, if the model is
+     * invalid then creation will fail.
+     *
+     * @param Array $args An array of key-value pairs representing the
+     * properties to set upon creation.
+     * @return \BaseModel the newly created record.
+     */
     public static function create(Array $args)
     {
         try {
@@ -441,6 +602,16 @@ class BaseModel
         }
     }
 
+    /**
+     * Updates an existing record of this model type with the given arguments.
+     * All model validations will be executed before update, if the model is
+     * invalid then update will fail.
+     *
+     * @param int $id The ID of the record to be updated.
+     * @param Array $args An array of key-value pairs representing the
+     * properties to set when updating.
+     * @return \BaseModel the updated record.
+     */
     public static function update($id, Array $args)
     {
         try {
@@ -502,11 +673,23 @@ class BaseModel
         }
     }
 
+    /**
+     * Returns whether this model instance is persisted or not.
+     *
+     * @return boolean Whether this instance is persisted or not.
+     */
     public function isNew()
     {
         return $this->id <= 0;
     }
 
+    /**
+     * Saves the current model instance to the database. If the record is new
+     * then it will be created, otherwise updated. This method will run all the
+     * model validations before save.
+     *
+     * @return boolean Whether model could be saved or not.
+     */
     public function save()
     {
         $args = get_object_vars($this);
@@ -516,6 +699,9 @@ class BaseModel
         return true;
     }
 
+    /**
+     * Deletes this object from the database.
+     */
     public function delete()
     {
         try {

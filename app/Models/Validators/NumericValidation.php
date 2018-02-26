@@ -6,15 +6,33 @@ use \InvalidArgumentException as InvalidArgumentException;
 use \Sw0rdfish\Models\Validators\AbstractValidation as AbstractValidation;
 
 /**
-*
-*/
+ * Represents a validation that can be run on any model that checks that a field
+ * value is a numeric value.
+ */
 class NumericValidation extends AbstractValidation
 {
+	/**
+	 * Creates a new instance of a numeric validator with the given parameters.
+	 *
+	 * @param object $object The object instance where the validation will be
+	 * run.
+	 * @param string $field The property name where the value that needs be
+	 * numeric is stored.
+	 * @param array $options An array of options for the numericality which can
+	 * be: any of `greaterThan`, `greaterThanOrEqual`, `lessThan` or
+	 * `lessThanOrEqual`. Each of these options should have assigned the number
+	 * to be used as comparison.
+	 */
     function __construct($object, $field, Array $options = null)
     {
         parent::__construct($object, $field, $options);
     }
 
+	/**
+	 * Executes the numeric validation.
+	 *
+	 * @return boolean Whether the validation succeeded or not.
+	 */
     public function run()
     {
         return parent::runValidation(function(){

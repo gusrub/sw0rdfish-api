@@ -10,13 +10,25 @@ use Sw0rdfish\Models\DatabaseManager as DatabaseManager;
 use Sw0rdfish\Models\BaseModel as BaseModel;
 
 /**
-*
-*/
+ * Represents a base test case that all other test cases extend from. This class
+ * basically has functionality that all the other tests needs like initial
+ * setup, teardowns, etc.
+ */
 abstract class BaseTestCase extends TestCase
 {
+    /**
+     * The Slim application instance.
+     */
     protected $app;
+
+    /**
+     * A \PDO connection object instance to be used for database operations.
+     */
     protected $db;
 
+    /**
+     * Set ups each test case before actually running it
+     */
     public function setUp()
     {
         // load up an instance of the actual slim app
@@ -29,6 +41,9 @@ abstract class BaseTestCase extends TestCase
         $this->cleanupData();
     }
 
+    /**
+     * Executes actions after each test case is run.
+     */
     public function tearDown()
     {
         // load up an instance of the actual slim app
@@ -41,11 +56,17 @@ abstract class BaseTestCase extends TestCase
         $this->cleanupData();
     }
 
+    /**
+     * Instantiates the database and gets a connection.
+     */
     private function loadDb()
     {
         $this->db = DatabaseManager::getDbConnection();
     }
 
+    /**
+     * Instantiates a new Slim application
+     */
     private function loadApp()
     {
         $this->app = new Application([
@@ -55,6 +76,9 @@ abstract class BaseTestCase extends TestCase
                 ]);
     }
 
+    /**
+     * Truncates all defined tables in the model.
+     */
     private function cleanupData()
     {
         if (defined(sprintf("%s::CLEANUP_TABLES", static::class))) {

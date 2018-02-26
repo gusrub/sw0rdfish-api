@@ -3,7 +3,10 @@
 	[
 		{
 			"path": ".",
-      "folder_exclude_patterns": ["vendor"],
+      "folder_exclude_patterns": [
+        "vendor",
+        "docs"
+      ],
       "file_exclude_patterns": [
         "*.bak",
         "*.sublime-workspace"
