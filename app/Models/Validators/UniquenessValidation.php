@@ -7,15 +7,38 @@ use \Sw0rdfish\Models\DatabaseManager as DatabaseManager;
 use \Sw0rdfish\Models\Validators\AbstractValidation as AbstractValidation;
 
 /**
-*
-*/
+ * Represents a validation that can be run on any model that checks that a field
+ * has a unique value on the database. This validation supports a set of options
+ * to check against a certain table, case sensitiveness or a scoped value.
+ */
 class UniquenessValidation extends AbstractValidation
 {
+
+	/**
+	 * Creates a new instance of a uniqueness validator with the given
+	 * parameters.
+	 *
+	 * @param object $object The object instance where the validation will be
+	 * run.
+	 * @param string $field The property name that must have a unique value.
+	 * @param array $options An array of options to configure the criteria of
+	 * the uniqueness match. Supported options are `table` for the table that
+	 * should be checked against, `field` to define which field stores the value
+	 * if its not the same name as the property, `caseSensitive` which sets
+	 * whether the uniqueness considers casing and finally `scope` to use an
+	 * dditional field as criteria, that is, uniqueness is scoped also to that
+	 * field or key combination.
+	 */
     function __construct($object, $field, Array $options = null)
     {
         parent::__construct($object, $field, $options);
     }
 
+	/**
+	 * Executes the uniqueness validation.
+	 *
+	 * @return boolean Whether the validation succeeded or not.
+	 */
     public function run()
     {
         return parent::runValidation(function(){
@@ -28,7 +51,7 @@ class UniquenessValidation extends AbstractValidation
 
             // set defaults if no options were given
             if (array_key_exists('table', $this->options) == false) {
-                $this->options['table'] = $this->object::TABLE_NAME;
+                $this->options['table'] = $this->object->TABLE_NAME;
             }
             if (array_key_exists('field', $this->options) == false) {
                 $this->options['field'] = $this->field;
