@@ -21,6 +21,9 @@ pipelines:
           - echo "STARTING TESTS WITH sqlite"
           - cat sw0rdfish-sqlite.sql | sqlite3 sw0rdfish.db3
           - export DB_DRIVER=sqlite
+          - echo "Current folder is `pwd`"
+          - echo "Listing folders:"
+          - ls -lh
           - ./test.sh
           - echo "STARTING TESTS WITH MYSQL"
           - mysql --host=127.0.0.1 --user=sw0rdfish_user --password=sw0rdfish_password sw0rdfish < sw0rdfish-mysql.sql
