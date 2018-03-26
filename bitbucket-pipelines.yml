@@ -54,7 +54,7 @@ pipelines:
           - ./deploy.sh
     - step:
         name: Deploy to production
-        deployment: staging
+        deployment: production
         trigger: manual
         script:
           - ./deploy.sh
