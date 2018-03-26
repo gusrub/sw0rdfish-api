@@ -4,27 +4,44 @@
 # -----
 # You can specify a custom docker image from Docker Hub as your build environment.
 image: php:7.1.1
+options:
+    max-time: 15
 
 pipelines:
   default:
     - step:
+        name: Build source
         caches:
           - composer
-        services:
-          - mysql
+          - vendor
         script:
-          - apt-get update && apt-get install -y unzip mysql-client sqlite3
-          - docker-php-ext-install pdo pdo_mysql
-          - docker-php-ext-enable pdo pdo_mysql
-          - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-          - composer install
+          - curl -sS https://getcomposer.org/installer | php -- --filename=composer
+          - ./composer install
+        artifacts:
+          - composer
+          - composer.lock
+    - step:
+        name: Test SQLite
+        caches:
+          - composer
+          - vendor
+        script:
+          - apt-get update && apt-get install -y unzip sqlite3
           - echo "STARTING TESTS WITH sqlite"
           - cat sw0rdfish-sqlite.sql | sqlite3 sw0rdfish.db3
           - export DB_DRIVER=sqlite
-          - echo "Current folder is `pwd`"
-          - echo "Listing folders:"
-          - ls -lh
           - ./test.sh
+    - step:
+        name: Test MySql
+        caches:
+          - composer
+          - vendor
+        services:
+          - mysql
+        script:
+          - apt-get update && apt-get install -y unzip mysql-client
+          - docker-php-ext-install pdo pdo_mysql
+          - docker-php-ext-enable pdo pdo_mysql
           - echo "STARTING TESTS WITH MYSQL"
           - mysql --host=127.0.0.1 --user=sw0rdfish_user --password=sw0rdfish_password sw0rdfish < sw0rdfish-mysql.sql
           - export DB_DRIVER=mysql
@@ -32,7 +49,7 @@ pipelines:
 
 definitions:
   caches:
-    composer: vendor/
+    vendor: vendor/
   services:
     mysql:
       image: mysql
