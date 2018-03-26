@@ -22,7 +22,7 @@ pipelines:
           - composer
           - composer.lock
     - step:
-        name: Test SQLite
+        name: Test suite for SQLite
         caches:
           - composer
           - vendor
@@ -33,7 +33,7 @@ pipelines:
           - export DB_DRIVER=sqlite
           - ./test.sh
     - step:
-        name: Test MySql
+        name: Test suite for MySql
         caches:
           - composer
           - vendor
@@ -47,6 +47,17 @@ pipelines:
           - mysql --host=127.0.0.1 --user=sw0rdfish_user --password=sw0rdfish_password sw0rdfish < sw0rdfish-mysql.sql
           - export DB_DRIVER=mysql
           - ./test.sh
+    - step:
+        name: Deploy to staging
+        deployment: staging
+        script:
+          - ./deploy.sh
+    - step:
+        name: Deploy to production
+        deployment: staging
+        trigger: manual
+        script:
+          - ./deploy.sh
 
 definitions:
   caches:
