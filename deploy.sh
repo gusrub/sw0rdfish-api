@@ -1,5 +1,8 @@
 #!/bin/bash
 
+echo "Listing files"
+ls -lh
+
 LONG_COMMIT=$BITBUCKET_COMMIT
 SHORT_COMMIT=${LONG_COMMIT:0:8}
 

@@ -50,10 +50,6 @@ pipelines:
   branches:
     staging:
       - step:
-        name: Listing contents
-        script:
-          - ls -lh
-      - step:
           name: Deploy to staging
           deployment: staging
           script:
