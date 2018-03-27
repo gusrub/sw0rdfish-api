@@ -47,17 +47,20 @@ pipelines:
           - mysql --host=127.0.0.1 --user=sw0rdfish_user --password=sw0rdfish_password sw0rdfish < sw0rdfish-mysql.sql
           - export DB_DRIVER=mysql
           - ./test.sh
-    - step:
-        name: Deploy to staging
-        deployment: staging
-        script:
-          - ./deploy.sh
-    - step:
-        name: Deploy to production
-        deployment: production
-        trigger: manual
-        script:
-          - ./deploy.sh
+  branches:
+    staging:
+      - step:
+          name: Deploy to staging
+          deployment: staging
+          script:
+            - ./deploy.sh
+    master:
+      - step:
+          name: Deploy to production
+          deployment: production
+          trigger: manual
+          script:
+            - ./deploy.sh
 
 definitions:
   caches:
