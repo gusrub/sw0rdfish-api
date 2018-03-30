@@ -94,7 +94,7 @@ pipelines:
             - vendor
           deployment: staging
           script:
-            - apt-get update && apt-get install -y bzip2
+            - apt-get update && apt-get install -y bzip2 openssh-client
             - ./deploy.sh
 
     master:
@@ -137,13 +137,14 @@ pipelines:
             - export DB_DRIVER=mysql
             - ./test.sh
       - step:
-          name: Deploy to staging
+          name: Deploy to production
           trigger: manual
           caches:
             - composer
             - vendor
-          deployment: staging
+          deployment: production
           script:
+            - apt-get update && apt-get install -y bzip2 openssh-client
             - ./deploy.sh
 
 definitions:
