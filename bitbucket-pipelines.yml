@@ -94,6 +94,7 @@ pipelines:
             - vendor
           deployment: staging
           script:
+            - apt-get update && apt-get install -y bzip2
             - ./deploy.sh
 
     master:

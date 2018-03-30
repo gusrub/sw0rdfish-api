@@ -99,7 +99,8 @@ class DatabaseManager
     private static function getSQLiteConnection()
     {
         $dbName = getenv("DB_NAME");
-        $connection = new \PDO("sqlite:".__DIR__."../../../$dbName.db3");
+        $dbPath = getenv("DB_PATH");
+        $connection = new \PDO("sqlite:"."$dbPath/$dbName.db3");
 
         // unfortunately we need to enable pragma for foreign keys on each connection :(
         if ($connection) {
