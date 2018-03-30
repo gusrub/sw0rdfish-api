@@ -59,8 +59,8 @@ if [[ ! -z "$BITBUCKET_BRANCH" ]]; then
     if [[ $BITBUCKET_BRANCH == "master" ]]; then
         echo "Will deploy commit '$SHORT_COMMIT' from $BITBUCKET_BRANCH branch to PRODUCTION environment ($APP_URL_PROD) in dreamhost..."
         compress_build
-        upload_build $APP_URL_STAGING "production"
-        activate_build $APP_URL_STAGING "production"
+        upload_build $APP_URL_PROD "production"
+        activate_build $APP_URL_PROD "production"
     elif [[ $BITBUCKET_BRANCH == "staging" ]]; then
         echo "Will deploy commit '$SHORT_COMMIT' from $BITBUCKET_BRANCH branch to STAGING environment ($APP_URL_STAGING) in dreamhost..."
         compress_build
