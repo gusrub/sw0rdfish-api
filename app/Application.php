@@ -2,7 +2,9 @@
 
 namespace Sw0rdfish;
 
-require __DIR__ .  '/../vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
+
+use Sw0rdfish\Helpers\I18n;
 
 /**
 * Main application
@@ -17,7 +19,7 @@ class Application extends \Slim\App
         # environment mode should always be set outside the app
         $mode = getenv('SW0RDFISH_ENV');
         if (empty($mode)) {
-            exit("No environment set. Make sure that the SW0RDISH_ENV environment variable is set\n");
+            exit(I18n::translate("No environment set. Make sure that the SW0RDISH_ENV environment variable is set"));
         }
 
         # Load configuration but only if there is a file, else we

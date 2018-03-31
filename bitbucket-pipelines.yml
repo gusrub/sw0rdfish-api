@@ -27,7 +27,12 @@ pipelines:
           - composer
           - vendor
         script:
-          - apt-get update && apt-get install -y unzip sqlite3
+          - apt-get update && apt-get install -y unzip sqlite3 locales
+          - docker-php-ext-install gettext
+          - docker-php-ext-enable gettext
+          - sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
+          - sed -i -e 's/# es_MX.UTF-8 UTF-8/es_MX.UTF-8 UTF-8/' /etc/locale.gen
+          - locale-gen
           - echo "STARTING TESTS WITH sqlite"
           - cat sw0rdfish-sqlite.sql | sqlite3 sw0rdfish.db3
           - export DB_DRIVER=sqlite
@@ -40,9 +45,12 @@ pipelines:
         services:
           - mysql
         script:
-          - apt-get update && apt-get install -y unzip mysql-client
-          - docker-php-ext-install pdo pdo_mysql
-          - docker-php-ext-enable pdo pdo_mysql
+          - apt-get update && apt-get install -y unzip mysql-client locales
+          - docker-php-ext-install pdo pdo_mysql gettext
+          - docker-php-ext-enable pdo pdo_mysql gettext
+          - sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
+          - sed -i -e 's/# es_MX.UTF-8 UTF-8/es_MX.UTF-8 UTF-8/' /etc/locale.gen
+          - locale-gen
           - echo "STARTING TESTS WITH MYSQL"
           - mysql --host=127.0.0.1 --user=sw0rdfish_user --password=sw0rdfish_password sw0rdfish < sw0rdfish-mysql.sql
           - export DB_DRIVER=mysql
@@ -67,7 +75,12 @@ pipelines:
             - composer
             - vendor
           script:
-            - apt-get update && apt-get install -y unzip sqlite3
+            - apt-get update && apt-get install -y unzip sqlite3 locales
+            - docker-php-ext-install gettext
+            - docker-php-ext-enable gettext
+            - sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
+            - sed -i -e 's/# es_MX.UTF-8 UTF-8/es_MX.UTF-8 UTF-8/' /etc/locale.gen
+            - locale-gen
             - echo "STARTING TESTS WITH sqlite"
             - cat sw0rdfish-sqlite.sql | sqlite3 sw0rdfish.db3
             - export DB_DRIVER=sqlite
@@ -80,9 +93,12 @@ pipelines:
           services:
             - mysql
           script:
-            - apt-get update && apt-get install -y unzip mysql-client
-            - docker-php-ext-install pdo pdo_mysql
-            - docker-php-ext-enable pdo pdo_mysql
+            - apt-get update && apt-get install -y unzip mysql-client locales
+            - docker-php-ext-install pdo pdo_mysql gettext
+            - docker-php-ext-enable pdo pdo_mysql gettext
+            - sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
+            - sed -i -e 's/# es_MX.UTF-8 UTF-8/es_MX.UTF-8 UTF-8/' /etc/locale.gen
+            - locale-gen
             - echo "STARTING TESTS WITH MYSQL"
             - mysql --host=127.0.0.1 --user=sw0rdfish_user --password=sw0rdfish_password sw0rdfish < sw0rdfish-mysql.sql
             - export DB_DRIVER=mysql
@@ -116,8 +132,13 @@ pipelines:
             - composer
             - vendor
           script:
-            - apt-get update && apt-get install -y unzip sqlite3
+            - apt-get update && apt-get install -y unzip sqlite3 locales
+            - docker-php-ext-install gettext
+            - docker-php-ext-enable gettext
             - echo "STARTING TESTS WITH sqlite"
+            - sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
+            - sed -i -e 's/# es_MX.UTF-8 UTF-8/es_MX.UTF-8 UTF-8/' /etc/locale.gen
+            - locale-gen
             - cat sw0rdfish-sqlite.sql | sqlite3 sw0rdfish.db3
             - export DB_DRIVER=sqlite
             - ./test.sh
@@ -129,9 +150,12 @@ pipelines:
           services:
             - mysql
           script:
-            - apt-get update && apt-get install -y unzip mysql-client
-            - docker-php-ext-install pdo pdo_mysql
-            - docker-php-ext-enable pdo pdo_mysql
+            - apt-get update && apt-get install -y unzip mysql-client locales
+            - docker-php-ext-install pdo pdo_mysql gettext
+            - docker-php-ext-enable pdo pdo_mysql gettext
+            - sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
+            - sed -i -e 's/# es_MX.UTF-8 UTF-8/es_MX.UTF-8 UTF-8/' /etc/locale.gen
+            - locale-gen
             - echo "STARTING TESTS WITH MYSQL"
             - mysql --host=127.0.0.1 --user=sw0rdfish_user --password=sw0rdfish_password sw0rdfish < sw0rdfish-mysql.sql
             - export DB_DRIVER=mysql
