@@ -28,6 +28,8 @@ pipelines:
           - vendor
         script:
           - apt-get update && apt-get install -y unzip sqlite3
+          - docker-php-ext-install gettext
+          - docker-php-ext-enable gettext
           - echo "STARTING TESTS WITH sqlite"
           - cat sw0rdfish-sqlite.sql | sqlite3 sw0rdfish.db3
           - export DB_DRIVER=sqlite
@@ -41,8 +43,8 @@ pipelines:
           - mysql
         script:
           - apt-get update && apt-get install -y unzip mysql-client
-          - docker-php-ext-install pdo pdo_mysql
-          - docker-php-ext-enable pdo pdo_mysql
+          - docker-php-ext-install pdo pdo_mysql gettext
+          - docker-php-ext-enable pdo pdo_mysql gettext
           - echo "STARTING TESTS WITH MYSQL"
           - mysql --host=127.0.0.1 --user=sw0rdfish_user --password=sw0rdfish_password sw0rdfish < sw0rdfish-mysql.sql
           - export DB_DRIVER=mysql
@@ -68,6 +70,8 @@ pipelines:
             - vendor
           script:
             - apt-get update && apt-get install -y unzip sqlite3
+            - docker-php-ext-install gettext
+            - docker-php-ext-enable gettext
             - echo "STARTING TESTS WITH sqlite"
             - cat sw0rdfish-sqlite.sql | sqlite3 sw0rdfish.db3
             - export DB_DRIVER=sqlite
@@ -81,8 +85,8 @@ pipelines:
             - mysql
           script:
             - apt-get update && apt-get install -y unzip mysql-client
-            - docker-php-ext-install pdo pdo_mysql
-            - docker-php-ext-enable pdo pdo_mysql
+            - docker-php-ext-install pdo pdo_mysql gettext
+            - docker-php-ext-enable pdo pdo_mysql gettext
             - echo "STARTING TESTS WITH MYSQL"
             - mysql --host=127.0.0.1 --user=sw0rdfish_user --password=sw0rdfish_password sw0rdfish < sw0rdfish-mysql.sql
             - export DB_DRIVER=mysql
@@ -117,6 +121,8 @@ pipelines:
             - vendor
           script:
             - apt-get update && apt-get install -y unzip sqlite3
+            - docker-php-ext-install gettext
+            - docker-php-ext-enable gettext
             - echo "STARTING TESTS WITH sqlite"
             - cat sw0rdfish-sqlite.sql | sqlite3 sw0rdfish.db3
             - export DB_DRIVER=sqlite
@@ -130,8 +136,8 @@ pipelines:
             - mysql
           script:
             - apt-get update && apt-get install -y unzip mysql-client
-            - docker-php-ext-install pdo pdo_mysql
-            - docker-php-ext-enable pdo pdo_mysql
+            - docker-php-ext-install pdo pdo_mysql gettext
+            - docker-php-ext-enable pdo pdo_mysql gettext
             - echo "STARTING TESTS WITH MYSQL"
             - mysql --host=127.0.0.1 --user=sw0rdfish_user --password=sw0rdfish_password sw0rdfish < sw0rdfish-mysql.sql
             - export DB_DRIVER=mysql
