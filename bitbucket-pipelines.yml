@@ -176,7 +176,7 @@ definitions:
     vendor: vendor/
   services:
     mysql:
-      image: mysql
+      image: mysql:5.7
       environment:
         MYSQL_DATABASE: 'sw0rdfish'
         MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
