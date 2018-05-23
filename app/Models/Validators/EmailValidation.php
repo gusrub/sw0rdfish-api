@@ -3,7 +3,8 @@
 namespace Sw0rdfish\Models\Validators;
 
 use \InvalidArgumentException as InvalidArgumentException;
-use \Sw0rdfish\Models\Validators\AbstractValidation as AbstractValidation;
+use Sw0rdfish\Models\Validators\AbstractValidation as AbstractValidation;
+use Sw0rdfish\Helpers\I18n as I18n;
 
 /**
  * Represents a validation that can be run on any model that checks that a field
@@ -35,7 +36,7 @@ class EmailValidation extends AbstractValidation
 	        $email = filter_var($this->object->{$this->field}, FILTER_VALIDATE_EMAIL);
 
 	        if (empty($email)) {
-	            $this->errors = ["invalid email"];
+	            $this->errors = [I18n::translate('invalid email')];
 	        }
 		});
 	}

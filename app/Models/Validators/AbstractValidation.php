@@ -3,6 +3,7 @@
 namespace Sw0rdfish\Models\Validators;
 
 use \InvalidArgumentException as InvalidArgumentException;
+use Sw0rdfish\Helpers\I18n as I18n;
 
 /**
  * Represents a base validation that consists of necessary behavior for other
@@ -80,10 +81,12 @@ abstract class AbstractValidation
         $objectVars = get_class_vars($objectClass);
 
         if (array_key_exists($this->field, $objectVars) == false) {
-            $error = sprintf(
-                "Object of type '%s' has no '%s' property",
-                $objectClass,
-                $this->field
+            $error = I18n::translate(
+                "Object of type '{objectClass}' has no '{field}' property ",
+                [
+                    'objectClass' => $objectClass,
+                    'field' => $this->field
+                ]
             );
             throw new InvalidArgumentException($error, 1);
         }
@@ -98,7 +101,10 @@ abstract class AbstractValidation
     private function validateObject()
     {
         if (is_null($this->object)) {
-            throw new InvalidArgumentException("Expecting an instance of an object to validate against but none was given", 1);
+            $error = I18n::translate(
+                'Expecting an instance of an object to validate against but none was given'
+            );
+            throw new InvalidArgumentException($error, 1);
         }
     }
 

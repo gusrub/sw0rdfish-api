@@ -3,8 +3,9 @@
 namespace Sw0rdfish\Models\Validators;
 
 use \InvalidArgumentException as InvalidArgumentException;
-use \Sw0rdfish\Models\DatabaseManager as DatabaseManager;
-use \Sw0rdfish\Models\Validators\AbstractValidation as AbstractValidation;
+use Sw0rdfish\Models\DatabaseManager as DatabaseManager;
+use Sw0rdfish\Models\Validators\AbstractValidation as AbstractValidation;
+use Sw0rdfish\Helpers\I18n as I18n;
 
 /**
  * Represents a validation that can be run on any model that checks that a field
@@ -67,10 +68,12 @@ class UniquenessValidation extends AbstractValidation
             $optionsDiff = array_diff_key($uniquenessOptions, $this->options);
 
             if (empty($optionsDiff) == false) {
-                $error = sprintf(
-                    "Invalid options given for '%s' validation. Valid options are: '%s'",
-                    $this->type,
-                    implode(", ", ['table', 'field', 'caseSensitive', 'scope'])
+                $error = I18n::translate(
+                    "Invalid options given for '{type}' validation. Valid options are: '{validations}' ",
+                    [
+                        'type' => $this->type,
+                        'validations' => implode(", ", ['table', 'field', 'caseSensitive', 'scope'])
+                    ]
                 );
                 throw new InvalidArgumentException($error, 1);
             }
@@ -93,7 +96,14 @@ class UniquenessValidation extends AbstractValidation
                 $scopeValue = $this->object->{$scope};
 
                 if (empty($scopeValue)) {
-                    $this->errors = [sprintf("field '%s' is scoped to '%s' but it is empty", $this->field, $scope)];
+                    $this->errors = [
+                        I18n::translate("field '{field}' is scoped to '{scope}' but it is empty",
+                            [
+                                'field' => $this->field,
+                                'scope' => $scope
+                            ]
+                        )
+                    ];
                     return false;
                 }
                 $scopeFilter = "AND $scope = '$scopeValue'";
@@ -124,7 +134,13 @@ class UniquenessValidation extends AbstractValidation
             $result = $statement->fetchColumn();
 
             if ($result > 0) {
-                $this->errors = [sprintf("duplicate value found for '%s'", $this->field)];
+                $this->errors = [
+                    I18n::translate("duplicate value found for '{field}'",
+                        [
+                            'field' => $this->field
+                        ]
+                    )
+                ];
             }
         });
     }

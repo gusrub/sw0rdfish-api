@@ -3,7 +3,8 @@
 namespace Sw0rdfish\Models\Validators;
 
 use \InvalidArgumentException as InvalidArgumentException;
-use \Sw0rdfish\Models\Validators\AbstractValidation as AbstractValidation;
+use Sw0rdfish\Models\Validators\AbstractValidation as AbstractValidation;
+use Sw0rdfish\Helpers\I18n as I18n;
 
 /**
  * Represents a validation that can be run on any model that checks that a field
@@ -38,17 +39,21 @@ class NumericValidation extends AbstractValidation
         return parent::runValidation(function(){
             // we should only accept either greaterThan or greaterThanOrEqual and lessThan or lessThanOrEqual noth both:
             if (count(array_intersect_key($this->options, array_flip(["greaterThan", "greaterThanOrEqual"]))) > 1) {
-                $error = sprintf(
-                    "Invalid options given for '%s' validation, you can choose either greaterThan or greaterThanOrEqual but not both",
-                    __CLASS__
+                $error = I18n::translate(
+                    "Invalid options given for '{className}' validation, you can choose either greaterThan or greaterThanOrEqual but not both",
+                    [
+                        'className' => __CLASS__
+                    ]
                 );
                 throw new InvalidArgumentException($error, 1);
             }
 
             if (count(array_intersect_key($this->options, array_flip(["lessThan", "lessThanOrEqual"]))) > 1) {
-                $error = sprintf(
-                    "Invalid options given for '%s' validation, you can choose either lessThan or lessThanOrEqual but not both",
-                    __CLASS__
+                $error = I18n::translate(
+                    "Invalid options given for '{className}' validation, you can choose either lessThan or lessThanOrEqual but not both",
+                    [
+                        'className' => __CLASS__
+                    ]
                 );
                 throw new InvalidArgumentException($error, 1);
             }
@@ -73,9 +78,13 @@ class NumericValidation extends AbstractValidation
 
             if (isset($greaterThan) && isset($lessThan)) {
                 if ($greaterThan >= $lessThan) {
-                    $error = sprintf(
-                        "Invalid options given for '%s' validation: '$greaterThan' cannot be greater or equal than '$lessThan' ",
-                        __CLASS__
+                    $error = I18n::translate(
+                        "Invalid options given for '{className}' validation: 'greaterThan' ({greaterThan}) cannot be greater or equal than 'lessThan' ({lessThan}) ",
+                        [
+                            'className' => __CLASS__,
+                            'lessThan' => $lessThan,
+                            'greaterThan' => $greaterThan
+                        ]
                     );
                     throw new InvalidArgumentException($error, 1);
                 }
@@ -83,9 +92,13 @@ class NumericValidation extends AbstractValidation
 
             if (isset($greaterThan) && isset($lessThanOrEqual)) {
                 if ($greaterThan >= $lessThanOrEqual) {
-                    $error = sprintf(
-                        "Invalid options given for '%s' validation: '$greaterThan' cannot be greater than '$lessThanOrEqual' ",
-                        __CLASS__
+                    $error = I18n::translate(
+                        "Invalid options given for '{className}' validation: 'greaterThan' ({greaterThan}) cannot be greater than 'lessThanOrEqual' ({lessThanOrEqual}) ",
+                        [
+                            'className' => __CLASS__,
+                            'lessThanOrEqual' => $lessThanOrEqual,
+                            'greaterThan' => $greaterThan
+                        ]
                     );
                     throw new InvalidArgumentException($error, 1);
                 }
@@ -93,9 +106,13 @@ class NumericValidation extends AbstractValidation
 
             if (isset($greaterThanOrEqual) && isset($lessThan)) {
                 if ($greaterThanOrEqual >= $lessThan) {
-                    $error = sprintf(
-                        "Invalid options given for '%s' validation: '$greaterThanOrEqual' cannot be greater than '$lessThan' ",
-                        __CLASS__
+                    $error = I18n::translate(
+                        "Invalid options given for '{className}' validation: 'greaterThanOrEqual' ({greaterThanOrEqual}) cannot be greater than 'lessThan' ({lessThan}) ",
+                        [
+                            'className' => __CLASS__,
+                            'lessThan' => $lessThan,
+                            'greaterThanOrEqual' => $greaterThanOrEqual
+                        ]
                     );
                     throw new InvalidArgumentException($error, 1);
                 }
@@ -103,9 +120,13 @@ class NumericValidation extends AbstractValidation
 
             if (isset($greaterThanOrEqual) && isset($lessThanOrEqual)) {
                 if ($greaterThanOrEqual > $lessThanOrEqual) {
-                    $error = sprintf(
-                        "Invalid options given for '%s' validation: '$greaterThanOrEqual' cannot be greater or equal than '$lessThanOrEqual' ",
-                        __CLASS__
+                    $error = I18n::translate(
+                        "Invalid options given for '{className}' validation: 'greaterThanOrEqual' ({greaterThanOrEqual}) cannot be greater than 'lessThanOrEqual' ({lessThanOrEqual}) ",
+                        [
+                            'className' => __CLASS__,
+                            'lessThanOrEqual' => $lessThanOrEqual,
+                            'greaterThanOrEqual' => $greaterThanOrEqual
+                        ]
                     );
                     throw new InvalidArgumentException($error, 1);
                 }
@@ -115,26 +136,59 @@ class NumericValidation extends AbstractValidation
             $value = $this->object->{$this->field};
 
             if(is_numeric($this->object->{$this->field}) == false) {
-                $this->errors = [sprintf("value '%s' is not a valid number", $value)];
+                $this->errors = [I18n::translate(
+                    "value '{value}' is not a valid number",
+                    [
+                        'value' => $value
+                    ]
+                )];
                 // we don't want to even compare values if what we received
                 // is not a number, so lets go back
                 return;
             }
 
             if (isset($greaterThan) && ($value <= $greaterThan)) {
-                array_push($this->errors, "must be greater than '$greaterThan' ");
+                array_push(
+                    $this->errors, I18n::translate(
+                        "must be greater than '{greaterThan}' ",
+                        [
+                            'greaterThan' => $greaterThan
+                        ]
+                    )
+                );
             }
 
             if (isset($greaterThanOrEqual) && ($value < $greaterThanOrEqual)) {
-                array_push($this->errors, "must be greater than or equal to '$greaterThanOrEqual' ");
+                array_push(
+                    $this->errors, I18n::translate(
+                        "must be greater than or equal to '{greaterThanOrEqual}' ",
+                        [
+                            'greaterThanOrEqual' => $greaterThanOrEqual
+                        ]
+                    )
+                );
             }
 
             if (isset($lessThan) && ($value >= $lessThan)) {
-                array_push($this->errors, "must be less than '$lessThan' ");
+                array_push(
+                    $this->errors, I18n::translate(
+                        "must be less than '{lessThan}' ",
+                        [
+                            'lessThan' => $lessThan
+                        ]
+                    )
+                );
             }
 
             if (isset($lessThanOrEqual) && ($value > $lessThanOrEqual)) {
-                array_push($this->errors, "must be less than or equal to '$lessThanOrEqual' ");
+                array_push(
+                    $this->errors, I18n::translate(
+                        "must be less than or equal to '{lessThanOrEqual}' ",
+                        [
+                            'lessThanOrEqual' => $lessThanOrEqual
+                        ]
+                    )
+                );
             }
 
         });

@@ -66,7 +66,7 @@ class I18n
 
         // // Set the text domain as 'messages'
         $domain = 'messages';
-        bindtextdomain($domain, __DIR__.'/../../locales');
+        bindtextdomain($domain, __DIR__.'/../Locale');
         textdomain($domain);
     }
 
