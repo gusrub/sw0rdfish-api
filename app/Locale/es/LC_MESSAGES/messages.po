@@ -1,0 +1,204 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Sw0rdfish API\n"
+"POT-Creation-Date: 2018-05-22 21:18-0700\n"
+"PO-Revision-Date: 2018-05-22 21:20-0700\n"
+"Last-Translator: Gustavo Rubio <gus@ahivamos.net>\n"
+"Language-Team: gus@ahivamos.net\n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.0.7\n"
+"X-Poedit-Basepath: ../../../..\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: translate\n"
+"X-Poedit-SearchPath-0: app\n"
+"X-Poedit-SearchPath-1: tests\n"
+
+#: app/Application.php:22
+msgid ""
+"No environment set. Make sure that the SW0RDISH_ENV environment variable is "
+"set"
+msgstr ""
+"No hay un entorno definido. Asegurate de que la variable de entorno "
+"SW0RDFISH este definida"
+
+#: app/Models/BaseModel.php:165 app/Models/BaseModel.php:181
+msgid "Invalid filter: '{key}' is not a valid field"
+msgstr "Filtro inválido: '{key}' no es un campo válido"
+
+#: app/Models/BaseModel.php:249
+msgid "{shortName} object has some invalid data"
+msgstr "el objeto {shortName} contiene algunos datos inválidos"
+
+#: app/Models/BaseModel.php:316
+msgid "Property '{key}' does not exist in '{className}' "
+msgstr "La propiedad '{key}' no existe en 'className' "
+
+#: app/Models/BaseModel.php:369
+msgid "No '{type}' validation exists "
+msgstr "No existe una validación de tipo '{type}' "
+
+#: app/Models/BaseModel.php:455
+msgid "Error while counting records from '{tableName}' "
+msgstr "Error al intentar contar registros de '{tableName}' "
+
+#: app/Models/BaseModel.php:530
+msgid "Error while loading records from '{tableName}' "
+msgstr "Error al cargar registros de '{tableName}' "
+
+#: app/Models/BaseModel.php:576
+msgid "Error while getting record from '{tableName}' with ID '{id}' "
+msgstr "Error al obtener registro de '{tableName}' con el ID '{id}' "
+
+#: app/Models/BaseModel.php:652
+msgid "Error while creating record in '{tableName}' "
+msgstr "Error al crear registro en '{tableName}' "
+
+#: app/Models/BaseModel.php:728
+msgid "Error while updating record in '{tableName}' with ID '{id}' "
+msgstr "Error al actualizar registro en '{tableName}' con el ID '{id}' "
+
+#: app/Models/BaseModel.php:785
+msgid "Error while deleting record from '{tableName}' with ID '{id}' "
+msgstr "Error al eliminar registro de '{tableName}' con el ID '{id}' "
+
+#: app/Models/DatabaseManager.php:42 app/Models/DatabaseManager.php:82
+msgid "Unknown driver '{dbDriver}', valid values are 'sqlite' and 'mysql'"
+msgstr ""
+"Controlador '{dbDriver}' desconocido, valores válidos son 'sqlite' y 'mysql'"
+
+#: app/Models/Validators/AbstractValidation.php:85
+msgid "Object of type '{objectClass}' has no '{field}' property "
+msgstr "El objeto de tipo '{objectClass}' no contiene una propiedad '{field}' "
+
+#: app/Models/Validators/AbstractValidation.php:105
+msgid ""
+"Expecting an instance of an object to validate against but none was given"
+msgstr ""
+"Se esperaba la instancia de un objecto para validar en contra de pero "
+"ninguna se proporcionó"
+
+#: app/Models/Validators/EmailValidation.php:39
+msgid "invalid email"
+msgstr "correo inválido"
+
+#: app/Models/Validators/InclusionValidation.php:40
+msgid ""
+"Invalid options given for '{className}' validation, you must give an array "
+"with values to check against"
+msgstr ""
+"Opciones inválidas para la validación de '{className}', debes proporcionar "
+"un arreglo con valores contra las cuales validar"
+
+#: app/Models/Validators/InclusionValidation.php:50
+msgid "value '{value}' not included in [{options}]"
+msgstr "el valor '{value}' no está incluído en ['{options}']"
+
+#: app/Models/Validators/NumericValidation.php:43
+msgid ""
+"Invalid options given for '{className}' validation, you can choose either "
+"greaterThan or greaterThanOrEqual but not both"
+msgstr ""
+"Opciones inválidas para la validación de '{className}', puedes seleccionar "
+"greaterThan o greaterThanOrEqual pero no ambas"
+
+#: app/Models/Validators/NumericValidation.php:53
+msgid ""
+"Invalid options given for '{className}' validation, you can choose either "
+"lessThan or lessThanOrEqual but not both"
+msgstr ""
+"Opciones inválidas para la validación de '{className}', puedes seleccionar "
+"lessThan o lessThanOrEqual pero no ambas"
+
+#: app/Models/Validators/NumericValidation.php:82
+msgid ""
+"Invalid options given for '{className}' validation: "
+"'greaterThan' ({greaterThan}) cannot be greater or equal than "
+"'lessThan' ({lessThan}) "
+msgstr ""
+"Opciones inválidas para la validación '{className}': '{lessThan}' no puede "
+"ser mayor o igual a '{greaterThan}' "
+
+#: app/Models/Validators/NumericValidation.php:96
+msgid ""
+"Invalid options given for '{className}' validation: "
+"'greaterThan' ({greaterThan}) cannot be greater than "
+"'lessThanOrEqual' ({lessThanOrEqual}) "
+msgstr ""
+"Opciones inválidas para la validación '{className}': '{lessThan}' no puede "
+"ser mayor  a '{greaterThan}' "
+
+#: app/Models/Validators/NumericValidation.php:110
+msgid ""
+"Invalid options given for '{className}' validation: "
+"'greaterThanOrEqual' ({greaterThanOrEqual}) cannot be greater than "
+"'lessThan' ({lessThan}) "
+msgstr ""
+"Opciones inválidas para la validación '{className}': "
+"'greaterThanOrEqual' ({greaterThanOrEqual}) no puede ser mayor a "
+"'lessThan' ({greaterThan}) "
+
+#: app/Models/Validators/NumericValidation.php:124
+msgid ""
+"Invalid options given for '{className}' validation: "
+"'greaterThanOrEqual' ({greaterThanOrEqual}) cannot be greater than "
+"'lessThanOrEqual' ({lessThanOrEqual}) "
+msgstr ""
+"Opciones inválidas para la validación '{className}': "
+"'greaterThanOrEqual' ({greaterThanOrEqual}) no puede ser mayor a "
+"'lessThanOrEqual' ({lessThanOrEqual}) "
+
+#: app/Models/Validators/NumericValidation.php:140
+msgid "value '{value}' is not a valid number"
+msgstr "el valor '{value}' no es un número válido"
+
+#: app/Models/Validators/NumericValidation.php:153
+msgid "must be greater than '{greaterThan}' "
+msgstr "debe ser mayor a '{greaterThan}' "
+
+#: app/Models/Validators/NumericValidation.php:164
+msgid "must be greater than or equal to '{greaterThanOrEqual}' "
+msgstr "debe ser mayor que o igual a '{greaterThanOrEqual}' "
+
+#: app/Models/Validators/NumericValidation.php:175
+msgid "must be less than '{lessThan}' "
+msgstr "debe ser menor a '{lessThan}' "
+
+#: app/Models/Validators/NumericValidation.php:186
+msgid "must be less than or equal to '{lessThanOrEqual}' "
+msgstr "debe ser menor o igual a '{lessThanOrEqual}' "
+
+#: app/Models/Validators/PresenceValidation.php:39
+msgid "cannot be empty"
+msgstr "no puede estar vacío"
+
+#: app/Models/Validators/UniquenessValidation.php:72
+msgid ""
+"Invalid options given for '{type}' validation. Valid options are: "
+"'{validations}' "
+msgstr ""
+"Opciones inválidas para la validación de '{className}', debes proporcionar "
+"un arreglo con valores contra las cuales validar "
+
+#: app/Models/Validators/UniquenessValidation.php:100
+msgid "field '{field}' is scoped to '{scope}' but it is empty"
+msgstr "el campo '{field}' está combinado con '{scope}' pero está vacío"
+
+#: app/Models/Validators/UniquenessValidation.php:138
+msgid "duplicate value found for '{field}'"
+msgstr "valor duplicado encontrado en '{field}'"
+
+#: app/Routes.php:11
+msgid "This is an API application. Nothing to see here!"
+msgstr "Esta es una aplicación de tipo API. No hay nada que ver aquí!"
+
+#: tests/Helpers/I18nTest.php:26 tests/Helpers/I18nTest.php:40
+msgid "TEST: this string should be translated!"
+msgstr "PRUEBA: esta cadena de texto debería estar traducida!"
+
+#: tests/Helpers/I18nTest.php:57
+msgid "TEST: Hello {name}, you are {years} years old!"
+msgstr "PRUEBA: Hola {name}, tienes {years} años!"

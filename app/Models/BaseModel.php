@@ -13,6 +13,7 @@ use Sw0rdfish\Models\Validators\EmailValidation as EmailValidation;
 use Sw0rdfish\Models\Validators\InclusionValidation as InclusionValidation;
 use Sw0rdfish\Models\Validators\NumericValidation as NumericValidation;
 use Sw0rdfish\Models\Validators\UniquenessValidation as UniquenessValidation;
+use Sw0rdfish\Helpers\I18n as I18n;
 
 /**
 * Base class that all other models inherit from. This class contains generic
@@ -160,7 +161,13 @@ class BaseModel
                         $field = $key == "id" ? sprintf("%s.%s", static::TABLE_NAME, $key) : $key;
                         array_push($fields, sprintf("%s=:%s", $field, $key));
                     } else {
-                        throw new ModelException(sprintf("Invalid filter: '%s' is not a valid field", $key));
+                        throw new ModelException(
+                            I18n::translate("Invalid filter: '{key}' is not a valid field",
+                                [
+                                    'key' => $key
+                                ]
+                            )
+                        );
                     }
                 }
             }
@@ -170,7 +177,13 @@ class BaseModel
                         $field = $key == "id" ? sprintf("%s.%s", static::TABLE_NAME, $key) : $key;
                         array_push($fields, sprintf("%s LIKE :%s", $field, $key));
                     } else {
-                        throw new ModelException(sprintf("Invalid filter: '%s' is not a valid field", $key));
+                        throw new ModelException(
+                            I18n::translate("Invalid filter: '{key}' is not a valid field",
+                                [
+                                    'key' => $key
+                                ]
+                            )
+                        );
                     }
                 }
             }
@@ -232,7 +245,13 @@ class BaseModel
     private static function runValidations($obj)
     {
         if ($obj->valid() == false) {
-            $message = sprintf("%s object has some invalid data", self::getShortName());
+            $message = I18n::translate(
+                "{shortName} object has some invalid data",
+                [
+                    'shortName' => self::getShortName()
+                ]
+
+            );
             $errors = $obj->getValidationErrors();
             throw new ValidationException($message, $errors);
         }
@@ -292,7 +311,15 @@ class BaseModel
                 }
             }
             else {
-                throw new ModelException(sprintf("Property '%s' does not exist in '%s'", $key, static::class));
+                throw new ModelException(
+                    I18n::translate(
+                        "Property '{key}' does not exist in '{className}' ",
+                        [
+                            'key' => $key,
+                            'className' => static::class
+                        ]
+                    )
+                );
             }
         }
     }
@@ -337,7 +364,15 @@ class BaseModel
                     $validation = new NumericValidation($this, $field, $options);
                     break;
                 default:
-                    throw new InvalidArgumentException("No '$type' validation exists.", 1);
+                    throw new InvalidArgumentException(
+                        I18n::translate(
+                            "No '{type}' validation exists ",
+                            [
+                                'type' => $type
+                            ]
+                        ),
+                        1
+                    );
             }
 
             if ($validation->run() == false) {
@@ -416,7 +451,12 @@ class BaseModel
 
             return $result;
         } catch (\PDOException $e) {
-            $message = sprintf("Error while counting records from '%s'", static::TABLE_NAME);
+            $message = I18n::translate(
+                "Error while counting records from '{tableName}' ",
+                [
+                    'tableName' => static::TABLE_NAME
+                ]
+            );
             throw new ModelException($message, $e);
         }
     }
@@ -486,7 +526,12 @@ class BaseModel
             $resultSet = $statement->fetchAll(\PDO::FETCH_CLASS, static::class);
             return $resultSet;
         } catch (\PDOException $e) {
-            $message = sprintf("Error while loading records from '%s'", static::TABLE_NAME);
+            $message = I18n::translate(
+                "Error while loading records from '{tableName}' ",
+                [
+                    'tableName' => static::TABLE_NAME
+                ]
+            );
             throw new ModelException($message, $e);
         }
     }
@@ -527,7 +572,13 @@ class BaseModel
 
             return $result;
         } catch (\PDOException $e) {
-            $message = sprintf("Error while getting record from '%s' with ID '%s' ", static::TABLE_NAME, $id);
+            $message = I18n::translate(
+                "Error while getting record from '{tableName}' with ID '{id}' ",
+                [
+                    'tableName' => static::TABLE_NAME,
+                    'id' => $id
+                ]
+            );
             throw new ModelException($message, $e);
         }
     }
@@ -597,7 +648,12 @@ class BaseModel
             return static::get($baseId);
 
         } catch (\PDOException $e) {
-            $message = sprintf("Error while creating record in '%s'", static::TABLE_NAME);
+            $message = I18n::translate(
+                "Error while creating record in '{tableName}' ",
+                [
+                    'tableName' => static::TABLE_NAME
+                ]
+            );
             throw new ModelException($message, $e);
         }
     }
@@ -668,7 +724,13 @@ class BaseModel
             return static::get($id);
 
         } catch (\PDOException $e) {
-            $message = sprintf("Error while updating record in '%s' with ID '%s'", static::TABLE_NAME, $id);
+            $message = I18n::translate(
+                "Error while updating record in '{tableName}' with ID '{id}' ",
+                [
+                    'tableName' => static::TABLE_NAME,
+                    'id' => $id
+                ]
+            );
             throw new ModelException($message, $e);
         }
     }
@@ -719,9 +781,14 @@ class BaseModel
 
             return $statement->execute();
         } catch (\PDOException $e) {
-            $message = sprintf("Error while deleting record from '%s' with ID '%s' ", static::TABLE_NAME, $this->id);
+            $message = I18n::translate(
+                "Error while deleting record from '{tableName}' with ID '{id}' ",
+                [
+                'tableName' => static::TABLE_NAME,
+                'id' => $this->id
+                ]
+            );
             throw new ModelException($message, $e);
         }
     }
 }
-

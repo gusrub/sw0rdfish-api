@@ -37,7 +37,14 @@ class DatabaseManager
                 $db = self::getMySqlConnection();
                 break;
             default:
-                throw new \Exception("Uknown driver '$dbDriver', valid values are 'sqlite' and 'mysql'");
+                throw new \Exception(
+                    I18n::translate(
+                        "Unknown driver '{dbDriver}', valid values are 'sqlite' and 'mysql'",
+                        [
+                            'dbDriver' => $dbDriver
+                        ]
+                    )
+                );
         }
 
         $db->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
@@ -70,7 +77,14 @@ class DatabaseManager
                 $query = "SET FOREIGN_KEY_CHECKS = 0; TRUNCATE TABLE $table; SET FOREIGN_KEY_CHECKS = 1;";
                 break;
             default:
-                throw new \Exception("Uknown driver '$dbDriver', valid values are 'sqlite' and 'mysql'");
+                throw new \Exception(
+                    I18n::translate(
+                        "Unknown driver '{dbDriver}', valid values are 'sqlite' and 'mysql'",
+                        [
+                            'dbDriver' => $dbDriver
+                        ]
+                    )
+                );
         }
 
         return $query;
