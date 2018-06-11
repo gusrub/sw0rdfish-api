@@ -55,21 +55,6 @@ class UniquenessValidationTest extends BaseTestCase
     }
 
     /**
-     * Test uniqueness with caseSensitive option set to true
-     *
-     * @return void
-     * @test
-     */
-    function caseSensitiveOption()
-    {
-        UserFactory::create(['email'=>'SOMEONE@EXAMPLE.COM']);
-        $obj = UserFactory::build(['email'=>'someone@example.com']);
-        $options = ['caseSensitive'=>true];
-        $validator = new UniquenessValidation($obj, 'email', $options);
-        $this->assertTrue($validator->run());
-    }
-
-    /**
      * Test uniqueness with scope option set
      *
      * @return void
