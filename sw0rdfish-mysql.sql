@@ -12,7 +12,7 @@ DROP SCHEMA IF EXISTS `sw0rdfish` ;
 -- -----------------------------------------------------
 -- Schema sw0rdfish
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `sw0rdfish` DEFAULT CHARACTER SET utf8 ;
+CREATE SCHEMA IF NOT EXISTS `sw0rdfish` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 USE `sw0rdfish` ;
 
 -- -----------------------------------------------------

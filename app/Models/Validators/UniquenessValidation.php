@@ -10,7 +10,7 @@ use Sw0rdfish\Helpers\I18n as I18n;
 /**
  * Represents a validation that can be run on any model that checks that a field
  * has a unique value on the database. This validation supports a set of options
- * to check against a certain table, case sensitiveness or a scoped value.
+ * to check against a certain table or a scoped value.
  */
 class UniquenessValidation extends AbstractValidation
 {
@@ -25,8 +25,7 @@ class UniquenessValidation extends AbstractValidation
 	 * @param array $options An array of options to configure the criteria of
 	 * the uniqueness match. Supported options are `table` for the table that
 	 * should be checked against, `field` to define which field stores the value
-	 * if its not the same name as the property, `caseSensitive` which sets
-	 * whether the uniqueness considers casing and finally `scope` to use an
+	 * if its not the same name as the property and finally `scope` to use an
 	 * dditional field as criteria, that is, uniqueness is scoped also to that
 	 * field or key combination.
 	 */
@@ -46,33 +45,28 @@ class UniquenessValidation extends AbstractValidation
             $uniquenessOptions = [
                 'table' => null,
                 'field' => null,
-                'caseSensitive' => null,
                 'scope' => null
             ];
 
             // set defaults if no options were given
             if (array_key_exists('table', $this->options) == false) {
-                $this->options['table'] = $this->object->TABLE_NAME;
+                $this->options['table'] = $this->object::TABLE_NAME;
             }
             if (array_key_exists('field', $this->options) == false) {
                 $this->options['field'] = $this->field;
-            }
-            if (array_key_exists('caseSensitive', $this->options) == false) {
-                $this->options['caseSensitive'] = false;
             }
             if (array_key_exists('scope', $this->options) == false) {
                 $this->options['scope'] = null;
             }
 
             // check that we got the right options
-            $optionsDiff = array_diff_key($uniquenessOptions, $this->options);
-
+            $optionsDiff = array_diff_key($this->options, $uniquenessOptions);
             if (empty($optionsDiff) == false) {
                 $error = I18n::translate(
-                    "Invalid options given for '{type}' validation. Valid options are: '{validations}' ",
+                    "Invalid options given for '{className}' validation. Valid options are: '{validations}' ",
                     [
-                        'type' => $this->type,
-                        'validations' => implode(", ", ['table', 'field', 'caseSensitive', 'scope'])
+                        'className' => __CLASS__,
+                        'validations' => implode(", ", ['table', 'field', 'scope'])
                     ]
                 );
                 throw new InvalidArgumentException($error, 1);
@@ -110,24 +104,13 @@ class UniquenessValidation extends AbstractValidation
             }
 
             $query = null;
-            if ($this->options['caseSensitive'] == true) {
-                $query = sprintf(
-                    "SELECT COUNT(%s) FROM %s WHERE %s = '%s' $idFilter $scopeFilter",
-                    $field,
-                    $table,
-                    $field,
-                    $this->object->{$this->field}
-                );
-            }
-            else {
-                $query = sprintf(
-                    "SELECT COUNT(%s) FROM %s WHERE LOWER(%s) = '%s' $idFilter $scopeFilter",
-                    $field,
-                    $table,
-                    $field,
-                    strtolower($this->object->{$this->field})
-                );
-            }
+            $query = sprintf(
+                "SELECT COUNT(%s) FROM %s WHERE LOWER(%s) = '%s' $idFilter $scopeFilter",
+                $field,
+                $table,
+                $field,
+                strtolower($this->object->{$this->field})
+            );
 
             $statement = $db->prepare($query);
             $statement->execute();
