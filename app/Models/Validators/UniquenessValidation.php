@@ -52,7 +52,7 @@ class UniquenessValidation extends AbstractValidation
 
             // set defaults if no options were given
             if (array_key_exists('table', $this->options) == false) {
-                $this->options['table'] = $this->object->TABLE_NAME;
+                $this->options['table'] = $this->object::TABLE_NAME;
             }
             if (array_key_exists('field', $this->options) == false) {
                 $this->options['field'] = $this->field;
@@ -65,13 +65,12 @@ class UniquenessValidation extends AbstractValidation
             }
 
             // check that we got the right options
-            $optionsDiff = array_diff_key($uniquenessOptions, $this->options);
-
+            $optionsDiff = array_diff_key($this->options, $uniquenessOptions);
             if (empty($optionsDiff) == false) {
                 $error = I18n::translate(
-                    "Invalid options given for '{type}' validation. Valid options are: '{validations}' ",
+                    "Invalid options given for '{className}' validation. Valid options are: '{validations}' ",
                     [
-                        'type' => $this->type,
+                        'className' => __CLASS__,
                         'validations' => implode(", ", ['table', 'field', 'caseSensitive', 'scope'])
                     ]
                 );

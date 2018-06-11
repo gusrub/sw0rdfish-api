@@ -78,7 +78,7 @@ abstract class AbstractValidation
     private function validateField()
     {
         $objectClass = get_class($this->object);
-        $objectVars = get_class_vars($objectClass);
+        $objectVars = get_object_vars($this->object);
 
         if (array_key_exists($this->field, $objectVars) == false) {
             $error = I18n::translate(
