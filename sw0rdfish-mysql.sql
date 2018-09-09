@@ -7,20 +7,13 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 -- -----------------------------------------------------
 -- Schema sw0rdfish
 -- -----------------------------------------------------
-DROP SCHEMA IF EXISTS `sw0rdfish` ;
 
 -- -----------------------------------------------------
--- Schema sw0rdfish
+-- Table `users`
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `sw0rdfish` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
-USE `sw0rdfish` ;
+DROP TABLE IF EXISTS `users` ;
 
--- -----------------------------------------------------
--- Table `sw0rdfish`.`users`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `sw0rdfish`.`users` ;
-
-CREATE TABLE IF NOT EXISTS `sw0rdfish`.`users` (
+CREATE TABLE IF NOT EXISTS `users` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `email` VARCHAR(255) NOT NULL,
   `password` VARCHAR(255) NOT NULL,
@@ -36,11 +29,11 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `sw0rdfish`.`secrets`
+-- Table `secrets`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `sw0rdfish`.`secrets` ;
+DROP TABLE IF EXISTS `secrets` ;
 
-CREATE TABLE IF NOT EXISTS `sw0rdfish`.`secrets` (
+CREATE TABLE IF NOT EXISTS `secrets` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(255) NOT NULL,
   `description` VARCHAR(255) NULL,
@@ -54,18 +47,18 @@ CREATE TABLE IF NOT EXISTS `sw0rdfish`.`secrets` (
   INDEX `fk_user_id_idx` (`userId` ASC),
   CONSTRAINT `fk_user_id`
     FOREIGN KEY (`userId`)
-    REFERENCES `sw0rdfish`.`users` (`id`)
+    REFERENCES `users` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `sw0rdfish`.`bank_account_secrets`
+-- Table `bank_account_secrets`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `sw0rdfish`.`bank_account_secrets` ;
+DROP TABLE IF EXISTS `bank_account_secrets` ;
 
-CREATE TABLE IF NOT EXISTS `sw0rdfish`.`bank_account_secrets` (
+CREATE TABLE IF NOT EXISTS `bank_account_secrets` (
   `id` INT NOT NULL,
   `accountNumber` TEXT NOT NULL,
   `routingNumber` TEXT NULL,
@@ -73,18 +66,18 @@ CREATE TABLE IF NOT EXISTS `sw0rdfish`.`bank_account_secrets` (
   UNIQUE INDEX `id_UNIQUE` (`id` ASC),
   CONSTRAINT `fk_bank_account_secrets_id`
     FOREIGN KEY (`id`)
-    REFERENCES `sw0rdfish`.`secrets` (`id`)
+    REFERENCES `secrets` (`id`)
     ON DELETE CASCADE
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `sw0rdfish`.`credit_card_secrets`
+-- Table `credit_card_secrets`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `sw0rdfish`.`credit_card_secrets` ;
+DROP TABLE IF EXISTS `credit_card_secrets` ;
 
-CREATE TABLE IF NOT EXISTS `sw0rdfish`.`credit_card_secrets` (
+CREATE TABLE IF NOT EXISTS `credit_card_secrets` (
   `id` INT NOT NULL,
   `cardholder` TEXT NOT NULL,
   `number` TEXT NOT NULL,
@@ -95,18 +88,18 @@ CREATE TABLE IF NOT EXISTS `sw0rdfish`.`credit_card_secrets` (
   UNIQUE INDEX `id_UNIQUE` (`id` ASC),
   CONSTRAINT `fk_credit_card_secrets_id`
     FOREIGN KEY (`id`)
-    REFERENCES `sw0rdfish`.`secrets` (`id`)
+    REFERENCES `secrets` (`id`)
     ON DELETE CASCADE
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `sw0rdfish`.`email_secrets`
+-- Table `email_secrets`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `sw0rdfish`.`email_secrets` ;
+DROP TABLE IF EXISTS `email_secrets` ;
 
-CREATE TABLE IF NOT EXISTS `sw0rdfish`.`email_secrets` (
+CREATE TABLE IF NOT EXISTS `email_secrets` (
   `id` INT NOT NULL,
   `email` TEXT NOT NULL,
   `password` TEXT NOT NULL,
@@ -115,18 +108,18 @@ CREATE TABLE IF NOT EXISTS `sw0rdfish`.`email_secrets` (
   UNIQUE INDEX `id_UNIQUE` (`id` ASC),
   CONSTRAINT `fk_email_secrets_id`
     FOREIGN KEY (`id`)
-    REFERENCES `sw0rdfish`.`secrets` (`id`)
+    REFERENCES `secrets` (`id`)
     ON DELETE CASCADE
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `sw0rdfish`.`website_credential_secrets`
+-- Table `website_credential_secrets`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `sw0rdfish`.`website_credential_secrets` ;
+DROP TABLE IF EXISTS `website_credential_secrets` ;
 
-CREATE TABLE IF NOT EXISTS `sw0rdfish`.`website_credential_secrets` (
+CREATE TABLE IF NOT EXISTS `website_credential_secrets` (
   `id` INT NOT NULL,
   `url` TEXT NOT NULL,
   `username` TEXT NOT NULL,
@@ -135,36 +128,36 @@ CREATE TABLE IF NOT EXISTS `sw0rdfish`.`website_credential_secrets` (
   UNIQUE INDEX `id_UNIQUE` (`id` ASC),
   CONSTRAINT `fk_website_credential_secrets_id`
     FOREIGN KEY (`id`)
-    REFERENCES `sw0rdfish`.`secrets` (`id`)
+    REFERENCES `secrets` (`id`)
     ON DELETE CASCADE
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `sw0rdfish`.`generic_secrets`
+-- Table `generic_secrets`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `sw0rdfish`.`generic_secrets` ;
+DROP TABLE IF EXISTS `generic_secrets` ;
 
-CREATE TABLE IF NOT EXISTS `sw0rdfish`.`generic_secrets` (
+CREATE TABLE IF NOT EXISTS `generic_secrets` (
   `id` INT NOT NULL,
   `secret` TEXT NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC),
   CONSTRAINT `fk_generic_secrets_id`
     FOREIGN KEY (`id`)
-    REFERENCES `sw0rdfish`.`secrets` (`id`)
+    REFERENCES `secrets` (`id`)
     ON DELETE CASCADE
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `sw0rdfish`.`user_tokens`
+-- Table `user_tokens`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `sw0rdfish`.`user_tokens` ;
+DROP TABLE IF EXISTS `user_tokens` ;
 
-CREATE TABLE IF NOT EXISTS `sw0rdfish`.`user_tokens` (
+CREATE TABLE IF NOT EXISTS `user_tokens` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `userId` INT NOT NULL,
   `type` VARCHAR(50) NOT NULL,
@@ -177,7 +170,7 @@ CREATE TABLE IF NOT EXISTS `sw0rdfish`.`user_tokens` (
   INDEX `fk_user_tokens_id_idx` (`userId` ASC),
   CONSTRAINT `fk_user_tokens_id`
     FOREIGN KEY (`userId`)
-    REFERENCES `sw0rdfish`.`users` (`id`)
+    REFERENCES `users` (`id`)
     ON DELETE CASCADE
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
