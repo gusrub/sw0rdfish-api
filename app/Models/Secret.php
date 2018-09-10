@@ -64,24 +64,33 @@ class Secret extends BaseModel
     public $notes;
 
     /**
-     * @var string The category for this secret. This is defined usually by the
-     * parent class.
+     * @var string The category for this secret.
      */
     public $category;
+
+    /**
+     * @var string The username for this secret. This will be encrypted.
+     */
+    public $username;
+
+    /**
+     * @var string The password for this secret. This will be encrypted.
+     */
+    public $password;
+
+    /**
+     * @var string The email for this secret.
+     */
+    public $email;
+
+    /**
+     * @var string The website URL for this secret.
+     */
+    public $website;
 
     /**
      * @var int The User ID that this secret belongs to
      */
     public $userId;
-
-    /**
-     * Returns the category name for the inherited class.
-     *
-     * @return string The category name.
-     */
-    public static function categoryName()
-    {
-        return self::getShortName();
-    }
 
 }

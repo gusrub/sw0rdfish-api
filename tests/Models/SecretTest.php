@@ -7,20 +7,20 @@ use Slim\Http\Environment;
 use Slim\Http\Request;
 use Sw0rdfish\Application as Application;
 use Sw0rdfish\Models\DatabaseManager as DatabaseManager;
-use Sw0rdfish\Models\EmailSecret as EmailSecret;
+use Sw0rdfish\Models\Secret as Secret;
 use Tests\Models\BaseTestCase;
 use Tests\Factories\UserFactory as UserFactory;
-use Tests\Factories\EmailSecretFactory as EmailSecretFactory;
+use Tests\Factories\SecretFactory as SecretFactory;
 
 /**
-* Contains tests for the Sw0rdfish\Models\EmailSecret model.
+* Contains tests for the Sw0rdfish\Models\Secret model.
 */
-class EmailSecretTest extends BaseTestCase
+class SecretTest extends BaseTestCase
 {
     /**
      * Defines an array of tables that should be cleaned before each test
      */
-    const CLEANUP_TABLES = ['users', 'secrets', 'email_secrets'];
+    const CLEANUP_TABLES = ['users', 'secrets'];
 
     /**
      * Test that the model defines a table constant
@@ -31,8 +31,8 @@ class EmailSecretTest extends BaseTestCase
     function definesTableConstant()
     {
         $this->assertTrue(
-            defined('Sw0rdfish\Models\EmailSecret::TABLE_NAME'),
-            'EmailSecret has a TABLE_NAME constant defined'
+            defined('Sw0rdfish\Models\Secret::TABLE_NAME'),
+            'Secret has a TABLE_NAME constant defined'
         );
     }
 
@@ -44,7 +44,7 @@ class EmailSecretTest extends BaseTestCase
      */
     function validatesPresenceOfUserId()
     {
-        $secret = EmailSecretFactory::build(['userId'=>null]);
+        $secret = SecretFactory::build(['userId'=>null]);
         $this->assertFalse($secret->valid());
         $errors = $secret->getValidationErrors();
         $this->assertNotEmpty($errors);
@@ -60,7 +60,7 @@ class EmailSecretTest extends BaseTestCase
      */
     function validatesNumericalityOfUserId()
     {
-        $secret = EmailSecretFactory::build(['userId'=>'invalid']);
+        $secret = SecretFactory::build(['userId'=>'invalid']);
         $this->assertFalse($secret->valid());
         $errors = $secret->getValidationErrors();
         $this->assertNotEmpty($errors);
@@ -76,7 +76,7 @@ class EmailSecretTest extends BaseTestCase
      */
     function validatesPositivityOfUserId()
     {
-        $secret = EmailSecretFactory::build(['userId'=>-15]);
+        $secret = SecretFactory::build(['userId'=>-15]);
         $this->assertFalse($secret->valid());
         $errors = $secret->getValidationErrors();
         $this->assertNotEmpty($errors);
@@ -92,7 +92,7 @@ class EmailSecretTest extends BaseTestCase
      */
     function validatesPresenceOfName()
     {
-        $secret = EmailSecretFactory::build(['name'=>null]);
+        $secret = SecretFactory::build(['name'=>null]);
         $this->assertFalse($secret->valid());
         $errors = $secret->getValidationErrors();
         $this->assertNotEmpty($errors);
@@ -109,12 +109,12 @@ class EmailSecretTest extends BaseTestCase
     function validatesUniquenessOfName()
     {
         $user = UserFactory::create();
-        EmailSecretFactory::create([
-            'name' => 'Test Email Secret',
+        SecretFactory::create([
+            'name' => 'Test Generic Secret',
             'userId' => $user->id
         ]);
-        $secret = EmailSecretFactory::build([
-            'name' => 'Test Email Secret',
+        $secret = SecretFactory::build([
+            'name' => 'Test Generic Secret',
             'userId' => $user->id
         ]);
         $this->assertFalse($secret->valid());
@@ -132,7 +132,7 @@ class EmailSecretTest extends BaseTestCase
      */
     function validatesPresenceOfCategory()
     {
-        $secret = EmailSecretFactory::build([
+        $secret = SecretFactory::build([
             'category' => null
         ]);
         $this->assertFalse($secret->valid());
@@ -150,7 +150,7 @@ class EmailSecretTest extends BaseTestCase
      */
     function validatesInclusionOfCategory()
     {
-        $secret = EmailSecretFactory::build([
+        $secret = SecretFactory::build([
             'category' => 'invalid'
         ]);
         $this->assertFalse($secret->valid());
@@ -161,39 +161,7 @@ class EmailSecretTest extends BaseTestCase
     }
 
     /**
-     * Test that email is present
-     *
-     * @return void
-     * @test
-     */
-    function validatesPresenceOfEmail()
-    {
-        $secret = EmailSecretFactory::build(['email'=>null]);
-        $this->assertFalse($secret->valid());
-        $errors = $secret->getValidationErrors();
-        $this->assertNotEmpty($errors);
-        $this->assertArrayHasKey('email', $errors);
-        $this->assertArrayHasKey('presence', $errors['email']);
-    }
-
-    /**
-     * Test that password is present
-     *
-     * @return void
-     * @test
-     */
-    function validatesPresenceOfPassword()
-    {
-        $secret = EmailSecretFactory::build(['password'=>null]);
-        $this->assertFalse($secret->valid());
-        $errors = $secret->getValidationErrors();
-        $this->assertNotEmpty($errors);
-        $this->assertArrayHasKey('password', $errors);
-        $this->assertArrayHasKey('presence', $errors['password']);
-    }
-
-    /**
-     * Test that a new email secret is created
+     * Test that a new generic secret is created
      *
      * @return void
      * @test
@@ -201,14 +169,14 @@ class EmailSecretTest extends BaseTestCase
     function createNew()
     {
         $user = UserFactory::create();
-        $secret = EmailSecretFactory::build(['userId'=>$user->id]);
+        $secret = SecretFactory::build(['userId'=>$user->id]);
         $this->assertTrue($secret->valid());
         $secret->save();
         $this->assertNotEmpty($secret->id);
     }
 
     /**
-     * Test that an existing email secret is retrieved
+     * Test that an existing generic secret is retrieved
      *
      * @return void
      * @test
@@ -216,13 +184,13 @@ class EmailSecretTest extends BaseTestCase
     function get()
     {
         $user = UserFactory::create();
-        $secret = EmailSecretFactory::create(['userId'=>$user->id]);
-        $secret = EmailSecret::get($secret->id);
+        $secret = SecretFactory::create(['userId'=>$user->id]);
+        $secret = Secret::get($secret->id);
         $this->assertNotEmpty($secret);
     }
 
     /**
-     * Test that an email secret is successfully deleted
+     * Test that a generic secret is successfully deleted
      *
      * @return void
      * @test
@@ -230,13 +198,13 @@ class EmailSecretTest extends BaseTestCase
     function deleteExisting()
     {
         $user = UserFactory::create();
-        $secret = EmailSecretFactory::create(['userId'=>$user->id]);
+        $secret = SecretFactory::create(['userId'=>$user->id]);
         $this->assertTrue($secret->delete());
-        $this->assertEmpty(EmailSecret::get($secret->id));
+        $this->assertEmpty(Secret::get($secret->id));
     }
 
     /**
-     * Test that all email secrets are returned when using no filters
+     * Test that all generic secrets are returned when using no filters
      *
      * @return void
      * @test
@@ -244,18 +212,18 @@ class EmailSecretTest extends BaseTestCase
     function listWithoutFilters()
     {
         $user = UserFactory::create();
-        $secrets = EmailSecretFactory::createList(
+        $secrets = SecretFactory::createList(
             4,
             ['userId'=>$user->id],
             true
         );
-        $secrets = EmailSecret::all();
+        $secrets = Secret::all();
         $this->assertNotEmpty($secrets);
         $this->assertEquals(4, count($secrets));
     }
 
     /**
-     * Test that all email secrets that match where criteria are returned
+     * Test that all generic secrets that match where criteria are returned
      *
      * @return void
      * @test
@@ -263,13 +231,13 @@ class EmailSecretTest extends BaseTestCase
     function listWithWhereFilter()
     {
         $userId = UserFactory::create()->id;
-        $secrets = EmailSecretFactory::createList(
+        $secrets = SecretFactory::createList(
             4,
             ['userId'=>$userId],
             true
         );
 
-        $secrets = EmailSecret::all([
+        $secrets = Secret::all([
             'where' => [
                 'userId' => $userId
             ]
@@ -280,7 +248,7 @@ class EmailSecretTest extends BaseTestCase
     }
 
     /**
-     * Test that all email secrets that match like criteria are returned
+     * Test that all generic secrets that match like criteria are returned
      *
      * @return void
      * @test
@@ -288,7 +256,7 @@ class EmailSecretTest extends BaseTestCase
     function listWithLikeFilter()
     {
         $userId = UserFactory::create()->id;
-        $secrets = EmailSecretFactory::createList(
+        $secrets = SecretFactory::createList(
             2,
             [
                 'description' => 'desc1',
@@ -296,7 +264,7 @@ class EmailSecretTest extends BaseTestCase
             ],
             true
         );
-        $secrets = EmailSecretFactory::createList(
+        $secrets = SecretFactory::createList(
             2,
             [
                 'description' => 'desc2',
@@ -305,7 +273,7 @@ class EmailSecretTest extends BaseTestCase
             true
         );
 
-        $secrets = EmailSecret::all([
+        $secrets = Secret::all([
             'like' => [
                 'description' => 'desc1'
             ]
@@ -325,15 +293,15 @@ class EmailSecretTest extends BaseTestCase
     {
         putenv("MAX_RECORDS_PER_PAGE=5");
         $userId = UserFactory::create()->id;
-        EmailSecretFactory::createList(7, ['userId'=>$userId], true);
+        SecretFactory::createList(7, ['userId'=>$userId], true);
 
-        $secrets = EmailSecret::all([
+        $secrets = Secret::all([
             'page' => 1
         ]);
         $this->assertNotEmpty($secrets);
         $this->assertEquals(5, count($secrets));
 
-        $secrets = EmailSecret::all([
+        $secrets = Secret::all([
             'page' => 2
         ]);
         $this->assertNotEmpty($secrets);
@@ -349,9 +317,9 @@ class EmailSecretTest extends BaseTestCase
     function listWithSorting()
     {
         $userId = UserFactory::create()->id;
-        $secrets = EmailSecretFactory::createList(4, ['userId'=>$userId], true);
+        $secrets = SecretFactory::createList(4, ['userId'=>$userId], true);
 
-        $secrets = EmailSecret::all([
+        $secrets = Secret::all([
             'orderBy' => 'id',
             'sort' => 'desc'
         ]);
