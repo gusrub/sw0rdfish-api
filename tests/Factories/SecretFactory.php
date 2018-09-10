@@ -7,19 +7,19 @@
 namespace Tests\Factories;
 
 use Faker\Factory as Factory;
-use Sw0rdfish\Models\BankAccountSecret as BankAccountSecret;
+use Sw0rdfish\Models\Secret as Secret;
 
 /**
- * A factory that creates a default bank account secret
+ * A factory that creates a default secret
  */
-class BankAccountSecretFactory
+class SecretFactory
 {
     use GenericFactoryTrait;
 
     /**
      * Defines the model name that this factory creates
      */
-    const MODEL_NAME = 'Sw0rdfish\Models\BankAccountSecret';
+    const MODEL_NAME = 'Sw0rdfish\Models\Secret';
 
     /**
      * Generates the necessary arguments to fill in this factory. The model
@@ -47,10 +47,12 @@ class BankAccountSecretFactory
             'name' => array_key_exists('name', $args) ? $args['name'] : "Test Secret $sequence",
             'description' => array_key_exists('description', $args) ? $args['description'] : 'Test Secret Description',
             'notes' => array_key_exists('notes', $args) ? $args['notes'] : $faker->text($maxNbChars = 200),
-            'category' => array_key_exists('category', $args) ? $args['category'] : 'bank_account_secret',
+            'category' => array_key_exists('category', $args) ? $args['category'] : 'generic_secret',
             'userId' => array_key_exists('userId', $args) ? $args['userId'] : $faker->randomDigitNotNull(),
-            'accountNumber' => array_key_exists('accountNumber', $args) ? $args['accountNumber'] : $faker->iban('US'),
-            'routingNumber' => array_key_exists('routingNumber', $args) ? $args['routingNumber'] : $faker->swiftBicNumber()
+            'username' => array_key_exists('username', $args) ? $args['username'] : $faker->userName(),
+            'password' => array_key_exists('password', $args) ? $args['password'] : $faker->password(),
+            'website' => array_key_exists('website', $args) ? $args['website'] : $faker->url(),
+            'email' => array_key_exists('email', $args) ? $args['email'] : $faker->safeEmail()
         ];
     }
 }
