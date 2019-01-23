@@ -7,12 +7,12 @@ use Slim\Http\Environment;
 use Slim\Http\Request;
 use Sw0rdfish\Application as Application;
 use Sw0rdfish\Models\Validators\NumericValidation as NumericValidation;
-use Tests\Models\BaseTestCase;
+use Tests\Models\BaseModelTestCase;
 
 /**
 * Contains tests for the Sw0rdfish\Models\Validators\NumericValidation validator.
 */
-class NumericValidationTest extends BaseTestCase
+class NumericValidationTest extends BaseModelTestCase
 {
 
     /**

@@ -7,12 +7,12 @@ use Slim\Http\Environment;
 use Slim\Http\Request;
 use Sw0rdfish\Application as Application;
 use Sw0rdfish\Models\Validators\InclusionValidation as InclusionValidation;
-use Tests\Models\BaseTestCase;
+use Tests\Models\BaseModelTestCase;
 
 /**
 * Contains tests for the Sw0rdfish\Models\Validators\InclusionValidation validator.
 */
-class InclusionValidationTest extends BaseTestCase
+class InclusionValidationTest extends BaseModelTestCase
 {
 
     /**

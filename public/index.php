@@ -7,5 +7,8 @@ $app = new Sw0rdfish\Application([
 			  'displayErrorDetails' => true
 			]
         ]);
-require __DIR__ . '/../app/Routes.php';
-$app->run();
+
+if (empty(getenv('SW0RDFISH_CONSOLE'))) {
+    $app->run();
+}
+

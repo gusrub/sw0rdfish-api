@@ -65,6 +65,44 @@ class BaseModel
     }
 
     /**
+     * Returns the current instance of the object as an associative array.
+     *
+     * @return Array An associative array containing key-value pairs of the
+     * current object.
+     */
+    public function asArray()
+    {
+        $jsonString = $this->asJSON();
+        $jsonObject = json_decode($jsonString, true);
+
+        if(empty($jsonObject)) {
+            throw new ModelException(
+                I18n::translate("Could not serialize JSON string to array")
+            );
+        }
+
+        return $jsonObject;
+    }
+
+    /**
+     * Returns the current instance of the object as a JSON string.
+     *
+     * @return String A JSON encoded string with the values of the instance.
+     */
+    public function asJSON()
+    {
+        $jsonString = json_encode($this);
+
+        if (!$jsonString) {
+            throw new ModelException(
+                I18n::translate("Could not serialize object to JSON String")
+            );
+        }
+
+        return $jsonString;
+    }
+
+    /**
      * Generates a merged array of bound parameters formatted do be used by the
      * PDO class.
      *
@@ -763,8 +801,10 @@ class BaseModel
 
     /**
      * Deletes this object from the database.
+     *
+     * @param int $id The ID of the record to be deleted.
      */
-    public function delete()
+    public function delete($id)
     {
         try {
             $db = DatabaseManager::getDbConnection();
@@ -777,7 +817,7 @@ class BaseModel
             }
 
             $statement = $db->prepare($query);
-            $statement->bindValue(":id", $this->id);
+            $statement->bindValue(":id", $id);
 
             return $statement->execute();
         } catch (\PDOException $e) {
