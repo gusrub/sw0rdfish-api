@@ -14,7 +14,7 @@ use Sw0rdfish\Models\BaseModel as BaseModel;
  * basically has functionality that all the other tests needs like initial
  * setup, teardowns, etc.
  */
-abstract class BaseTestCase extends TestCase
+abstract class BaseModelTestCase extends TestCase
 {
     /**
      * The Slim application instance.

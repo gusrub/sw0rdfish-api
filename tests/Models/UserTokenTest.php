@@ -8,14 +8,14 @@ use Slim\Http\Request;
 use Sw0rdfish\Application as Application;
 use Sw0rdfish\Models\DatabaseManager as DatabaseManager;
 use Sw0rdfish\Models\UserToken as UserToken;
-use Tests\Models\BaseTestCase;
+use Tests\Models\BaseModelTestCase;
 use Tests\Factories\UserFactory as UserFactory;
 use Tests\Factories\UserTokenFactory as UserTokenFactory;
 
 /**
 * Contains tests for the Sw0rdfish\Models\UserToken model.
 */
-class UserTokenTest extends BaseTestCase
+class UserTokenTest extends BaseModelTestCase
 {
 
     /**
@@ -172,8 +172,9 @@ class UserTokenTest extends BaseTestCase
     {
         $user = UserFactory::create();
         $token = UserTokenFactory::create(['userId'=>$user->id]);
-        $this->assertTrue($token->delete());
-        $this->assertEmpty(UserToken::get($token->id));
+        $tokenId = $token->id;
+        UserToken::delete($tokenId);
+        $this->assertEmpty(UserToken::get($tokenId));
     }
 
     /**

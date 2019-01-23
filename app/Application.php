@@ -30,6 +30,14 @@ class Application extends \Slim\App
             $dotenv = new \Dotenv\Dotenv($configPath, $configFile);
             $dotenv->load();
         }
+
+        # Load the routes
+        $this->loadRoutes();
+    }
+
+    private function loadRoutes()
+    {
+        require __DIR__ . '/Routes.php';
     }
 }
 

@@ -8,14 +8,14 @@ use Slim\Http\Request;
 use Sw0rdfish\Application as Application;
 use Sw0rdfish\Models\DatabaseManager as DatabaseManager;
 use Sw0rdfish\Models\Secret as Secret;
-use Tests\Models\BaseTestCase;
+use Tests\Models\BaseModelTestCase;
 use Tests\Factories\UserFactory as UserFactory;
 use Tests\Factories\SecretFactory as SecretFactory;
 
 /**
 * Contains tests for the Sw0rdfish\Models\Secret model.
 */
-class SecretTest extends BaseTestCase
+class SecretTest extends BaseModelTestCase
 {
     /**
      * Defines an array of tables that should be cleaned before each test
@@ -199,8 +199,9 @@ class SecretTest extends BaseTestCase
     {
         $user = UserFactory::create();
         $secret = SecretFactory::create(['userId'=>$user->id]);
-        $this->assertTrue($secret->delete());
-        $this->assertEmpty(Secret::get($secret->id));
+        $secretId = $secret->id;
+        Secret::delete($secretId);
+        $this->assertEmpty(Secret::get($secretId));
     }
 
     /**

@@ -7,14 +7,14 @@ use Slim\Http\Environment;
 use Slim\Http\Request;
 use Sw0rdfish\Application as Application;
 use Sw0rdfish\Models\DatabaseManager as DatabaseManager;
-use Tests\Models\BaseTestCase;
+use Tests\Models\BaseModelTestCase;
 use Sw0rdfish\Models\User as User;
 use Tests\Factories\UserFactory as UserFactory;
 
 /**
 * Contains tests for the Sw0rdfish\Models\User model.
 */
-class UserTest extends BaseTestCase
+class UserTest extends BaseModelTestCase
 {
 
 	/** Defines an array of tables that should be cleaned before each test */
@@ -333,8 +333,9 @@ class UserTest extends BaseTestCase
 	function deleteExisting()
 	{
 		$user = UserFactory::create();
-		$user->delete();
-		$user = User::get($user->id);
+		$userId = $user->id;
+		User::delete($userId);
+		$user = User::get($userId);
 
 		$this->assertEmpty($user);
 	}

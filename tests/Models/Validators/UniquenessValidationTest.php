@@ -9,12 +9,12 @@ use Sw0rdfish\Application as Application;
 use Sw0rdfish\Models\Validators\UniquenessValidation as UniquenessValidation;
 use Sw0rdfish\Models\User as User;
 use Tests\Factories\UserFactory as UserFactory;
-use Tests\Models\BaseTestCase;
+use Tests\Models\BaseModelTestCase;
 
 /**
 * Contains tests for the Sw0rdfish\Models\Validators\UniquenessValidation validator.
 */
-class UniquenessValidationTest extends BaseTestCase
+class UniquenessValidationTest extends BaseModelTestCase
 {
 
     /** Defines an array of tables that should be cleaned before each test */

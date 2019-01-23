@@ -7,12 +7,12 @@ use Slim\Http\Environment;
 use Slim\Http\Request;
 use Sw0rdfish\Application as Application;
 use Sw0rdfish\Models\Validators\PresenceValidation as PresenceValidation;
-use Tests\Models\BaseTestCase;
+use Tests\Models\BaseModelTestCase;
 
 /**
 * Contains tests for the Sw0rdfish\Models\Validators\PresenceValidation validator.
 */
-class PresenceValidationTest extends BaseTestCase
+class PresenceValidationTest extends BaseModelTestCase
 {
 
     /**
