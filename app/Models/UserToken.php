@@ -96,7 +96,9 @@ class UserToken extends BaseModel
         }
 
         // override the token, we should set this here ourselves
-        $args['token'] = $this->generateSecureToken(self::TOKEN_SIZE);
+        if($this->isNew()) {
+            $args['token'] = $this->generateSecureToken(self::TOKEN_SIZE);
+        }
 
         parent::__construct($args);
     }

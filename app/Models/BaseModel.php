@@ -227,7 +227,7 @@ class BaseModel
             }
 
             if (count($fields) > 0) {
-                return sprintf("WHERE (%s)", implode(", ", $fields));
+                return sprintf("WHERE (%s)", implode(" AND ", $fields));
             }
         }
 
@@ -499,6 +499,62 @@ class BaseModel
         }
     }
 
+    public static function exists(Array $args = null)
+    {
+        try {
+           $conditions = self::generateConditions($args);
+
+            $db = DatabaseManager::getDbConnection();
+            $query = null;
+            if (defined(sprintf("%s::BASE_TABLE_NAME", static::class))) {
+                $query = sprintf(
+                    "SELECT COUNT(*) FROM %s INNER JOIN %s ON %s.id = %s.id %s;",
+                    static::TABLE_NAME,
+                    static::BASE_TABLE_NAME,
+                    static::TABLE_NAME,
+                    static::BASE_TABLE_NAME,
+                    $conditions
+                );
+            } else {
+                $query = sprintf(
+                    "SELECT COUNT(*) FROM %s %s;",
+                    static::TABLE_NAME,
+                    $conditions
+                );
+            }
+            var_dump($query);
+            $statement = $db->prepare($query);
+
+            if (isset($conditions) && array_key_exists('where', $args)) {
+                foreach ($args['where'] as $field => $value) {
+                    $statement->bindValue(sprintf(":$field"), "$value");
+                }
+            }
+            if (isset($conditions) && array_key_exists('like', $args)) {
+                foreach ($args['like'] as $field => $value) {
+                    $statement->bindValue(sprintf(":$field"), "%$value%");
+                }
+            }
+
+            $statement->execute();
+            $result = (int)$statement->fetchColumn();
+
+            if ($result > 0) {
+                return true;
+            }
+
+            return false;
+        } catch (\PDOException $e) {
+            $message = I18n::translate(
+                "Error while counting records from '{tableName}' ",
+                [
+                    'tableName' => static::TABLE_NAME
+                ]
+            );
+            throw new ModelException($message, $e);
+        }
+    }
+
     /**
      * Lists the records for this model. If no arguments are given it will
      * return all the records from the first page. An array with options can be
@@ -507,7 +563,7 @@ class BaseModel
      * `orderBy` - A string with a name of a property that will be used for sorting
      * `sort` - The direction of the ordering for the field.
      * `page` - The number of page of the pagination.
-     * `conditions` - An array of where/like conditions to be used to filter.
+     * `where/like` - An array of where/like conditions to be used to filter.
      *
      * Any of the above options can be combined.
      *
@@ -788,11 +844,20 @@ class BaseModel
      * then it will be created, otherwise updated. This method will run all the
      * model validations before save.
      *
+     * If no arguments are given to the method then it will be saved with the
+     * instance data. Otherwise the passed arguments will override the instance
+     * values.
+     *
+     * @param Array $args An array of key-value pairs representing the
+     * properties to set when updating.
      * @return boolean Whether model could be saved or not.
      */
-    public function save()
+    public function save(Array $args = null)
     {
-        $args = get_object_vars($this);
+        if (empty($args)) {
+            $args = get_object_vars($this);
+        }
+
         $savedObject = $this->isNew() ? static::create($args) : static::update($this->id, $args);
         $this->assignAttributes(get_object_vars($savedObject));
 
