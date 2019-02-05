@@ -4,31 +4,32 @@ namespace Sw0rdfish\Controllers;
 
 use Sw0rdfish\Models\User as User;
 use Sw0rdfish\Models\UserToken as UserToken;
-use Sw0rdfish\Models\Secret as Secret;
 use Sw0rdfish\Models\ModelException as ModelException;
 use Sw0rdfish\Models\ValidationException as ValidationException;
 
 /**
 *
 */
-class UsersController
+class UserTokensController
 {
 
     protected $container;
 
     function __construct($container)
     {
-        // TODO: put this on a base controller
         $this->container = $container;
-        // $resourceLoaderService = $container['resourceLoaderService'];
-        // $this->resource = $resourceLoaderService->load();
     }
 
     function index($request, $response, $args)
     {
         try {
-            $users = User::all();
-            return $response->withJson($users);
+            $user = $request->getAttribute('user');
+            $tokens = UserToken::all([
+                'where' => [
+                    'userId' => $user->id
+                ]
+            ]);
+            return $response->withJson($tokens);
         } catch (ValidationException $e) {
             return $response->withJson($e->errors);
         }
@@ -37,10 +38,13 @@ class UsersController
     function create($request, $response, $args)
     {
         try {
+            $user = $request->getAttribute('user');
             $params = $request->getParsedBody();
-            $user = new User($params);
-            $user->save();
-            return $response->withJson($user)
+            $token = new UserToken($params);
+            $token->userId = $user->id;
+            $token->save();
+
+            return $response->withJson($token)
                             ->withStatus(201);
         } catch (ValidationException $e) {
             return $response->withJson($e->errors)
@@ -52,7 +56,9 @@ class UsersController
     {
         try {
             $user = $request->getAttribute('user');
-            return $response->withJson($user)
+            $token = $request->getAttribute('userToken');
+
+            return $response->withJson($token)
                             ->withStatus(200);
 
         } catch (Exception $e) {
@@ -64,10 +70,12 @@ class UsersController
     function update($request, $response, $args)
     {
         try {
+            $user = $request->getAttribute('user');
             $params = $request->getParsedBody();
-            $user = $user = $request->getAttribute('user');
-            $user->save($params);
-            return $response->withJson($user)
+            $token = $request->getAttribute('userToken');
+            $token->save($params);
+
+            return $response->withJson($token)
                             ->withStatus(200);
         } catch (Exception $e) {
             return $response->withJson($e->message)
@@ -78,11 +86,12 @@ class UsersController
     function destroy($request, $response, $args)
     {
         try {
-            User::delete($args['userId']);
+            UserToken::delete($args['tokenId']);
             return $response->withStatus(203);
         } catch (Exception $e) {
             return $response->withJson($e->message)
                           ->withStatus(400);
         }
     }
+
 }

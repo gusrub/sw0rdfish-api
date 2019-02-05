@@ -11,4 +11,3 @@ $app = new Sw0rdfish\Application([
 if (empty(getenv('SW0RDFISH_CONSOLE'))) {
     $app->run();
 }
-
