@@ -499,6 +499,18 @@ class BaseModel
         }
     }
 
+    /**
+     * Checks if a record exists for the given arguments. This method is easier
+     * on the database as it will only do a `count()` for the records instead of
+     * trying to retrieve the whole object.
+     *
+     * @param Array $args An array containing the key-value pairs of the
+     *  conditions that will be used for the query. These follow the same format
+     *  as the other methods where you can specify either a `where` or a `like`
+     *  operator. Such as `['where' => ['id'=>1]]` or
+     * `['like'=>['firstName'=>'John']]`
+     * @return Boolean Whether the record exists or not.
+     */
     public static function exists(Array $args = null)
     {
         try {
