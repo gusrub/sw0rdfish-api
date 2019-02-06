@@ -181,7 +181,6 @@ class UsersControllerTest extends BaseControllerTestCase
         $this->assertNotEmpty($result['createdDate']);
 
         $this->assertEquals($userId, $result['id']);
-        $this->assertEquals($userId, $result['id']);
         $this->assertEquals($user->firstName, $result['firstName']);
         $this->assertEquals($user->lastName, $result['lastName']);
         $this->assertEquals($user->email, $result['email']);

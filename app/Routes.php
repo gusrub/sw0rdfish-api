@@ -45,6 +45,26 @@ $this->group('/users', function ($app) {
                 return $response;
             });
         });
+        // SECRETS ROUTES
+        $this->group('/secrets', function($app){
+            $this->map(['GET'], '', Sw0rdfish\Controllers\SecretsController::class . ':index');
+            $this->map(['POST'], '', Sw0rdfish\Controllers\SecretsController::class . ':create');
+            $this->group('/{secretId:[0-9]+}', function($app){
+                $this->map(['GET'], '', Sw0rdfish\Controllers\SecretsController::class . ':show');
+                $this->map(['PUT', 'PATCH'], '', Sw0rdfish\Controllers\SecretsController::class . ':update');
+                $this->map(['DELETE'], '', Sw0rdfish\Controllers\SecretsController::class . ':destroy');
+            })->add(function($request, $response, $next){
+                $request = \Sw0rdfish\Middleware\ResourceLoader::load(
+                    'Secret',
+                    'secretId',
+                    $request,
+                    $response
+                );
+
+                $response = $next($request, $response);
+                return $response;
+            });
+        });
     })->add(function($request, $response, $next) {
         $request = \Sw0rdfish\Middleware\ResourceLoader::load(
             'User',

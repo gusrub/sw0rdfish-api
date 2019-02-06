@@ -41,7 +41,7 @@ class BaseModel
     /**
      * @var Array A list of validation errors for this model.
      */
-    private $validationErrors = [];
+    protected $validationErrors = [];
 
     /**
      * Defines the allowed keywords to do sorting.
@@ -339,12 +339,12 @@ class BaseModel
         foreach ($args as $key => $value) {
             if (property_exists(static::class, $key)) {
                 $property = new \ReflectionProperty($this, $key);
-                if ($property->isPublic()) {
+                if ($property->isPublic() || $property->isProtected()) {
                     $this->{$key} = $value;
                 }
             } elseif (property_exists(self::class, $key)) {
                 $property = new \ReflectionProperty(self::class, $key);
-                if ($property->isPublic()) {
+                if ($property->isPublic() || $property->isProtected()) {
                     $this->{$key} = $value;
                 }
             }
@@ -426,6 +426,9 @@ class BaseModel
      */
     public function valid()
     {
+        // reset current validation errors if any
+        $this->validationErrors = [];
+
         // check both base class (if any) and child class validations
         $validations = [];
         $parentClass = get_parent_class(static::class);
@@ -534,7 +537,7 @@ class BaseModel
                     $conditions
                 );
             }
-            var_dump($query);
+
             $statement = $db->prepare($query);
 
             if (isset($conditions) && array_key_exists('where', $args)) {
