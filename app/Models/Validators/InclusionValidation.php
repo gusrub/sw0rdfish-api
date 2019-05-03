@@ -16,9 +16,9 @@ class InclusionValidation extends AbstractValidation
      * Creates a new instance of an inclusion validator with the given
      * parameters.
      *
-     * @param object $object The object instance where the validation will be
-     * run.
-     * @param string $field The property name where the value that needs to
+     * @param \Sw0rdfish\Models\BaseModel $object The object instance where the
+     * validation will be run.
+     * @param String $field The property name where the value that needs to
      * match the list is stored.
      * @param array $options The list of values to check against inclusion.
      */

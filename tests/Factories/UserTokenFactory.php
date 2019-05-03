@@ -44,7 +44,8 @@ class UserTokenFactory
             'userId' => array_key_exists('userId', $args) ? $args['userId'] : $faker->randomDigitNotNull(),
             'type' => array_key_exists('type', $args) ? $args['type'] : UserToken::TYPES[array_rand(UserToken::TYPES)],
             'token' => array_key_exists('token', $args) ? $args['token'] : $faker->sha256(),
-            'expiration' => array_key_exists('expiration', $args) ? $args['expiration'] : $faker->dateTime()->format('Y-m-d H:i:s')
+            'expiration' => array_key_exists('expiration', $args) ? $args['expiration'] : $faker->dateTime()->format('Y-m-d H:i:s'),
+            'securityCode' => array_key_exists('securityCode', $args) ? $args['securityCode'] : base64_encode(random_bytes(UserToken::SECURITY_CODE_SIZE))
         ];
     }
 }

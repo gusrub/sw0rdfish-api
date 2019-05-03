@@ -15,6 +15,7 @@ CREATE TABLE `user_tokens` (
 	`type`	TEXT NOT NULL,
 	`token`	TEXT NOT NULL,
 	`expiration`	TEXT,
+	`securityCode` TEXT,
 	`createdDate`	TEXT NOT NULL,
 	`updatedDate`	TEXT,
 	FOREIGN KEY(`userId`) REFERENCES `users`(`id`) ON DELETE CASCADE

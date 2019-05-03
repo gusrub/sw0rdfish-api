@@ -6,3 +6,5 @@ vendor/*
 .env.test
 *.db3
 docs/
+build/
+output/

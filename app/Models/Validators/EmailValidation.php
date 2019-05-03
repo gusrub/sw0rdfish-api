@@ -15,9 +15,9 @@ class EmailValidation extends AbstractValidation
 	/**
 	 * Creates a new instance of an email validator with the given parameters.
 	 *
-	 * @param object $object The object instance where the validation will be
-	 * run.
-	 * @param string $field The property name where the email address is stored.
+	 * @param \Sw0rdfish\Models\BaseModel $object The object instance where the
+	 * validation will be run.
+	 * @param String $field The property name where the email address is stored.
 	 * @param array $options Any additional options for this validator.
 	 */
 	function __construct($object, $field, Array $options = null)

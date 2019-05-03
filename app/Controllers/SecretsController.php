@@ -8,17 +8,22 @@ use Sw0rdfish\Models\ModelException as ModelException;
 use Sw0rdfish\Models\ValidationException as ValidationException;
 
 /**
-*
-*/
-class SecretsController
+ * Manages all requests for secrets management.
+ */
+class SecretsController extends BaseController
 {
-    protected $container;
 
-    function __construct($container)
-    {
-        $this->container = $container;
-    }
-
+    /**
+     * Request to get a list of a user's secrets.
+     *
+     * @param \Psr\Http\Message\ServerRequestInterface $request The incoming
+     *  request object.
+     * @param \Psr\Http\Message\ResponseInterface $response The response that
+     *  will be used to return any data.
+     * @param Array $args An array containing any URL or Query-String generated
+     *  arguments.
+     * @return Array A list of the secrets for the given user.
+     */
     function index($request, $response, $args)
     {
         try {
@@ -34,6 +39,18 @@ class SecretsController
         }
     }
 
+    /**
+     * Request to create a new user secret.
+     *
+     * @param \Psr\Http\Message\ServerRequestInterface $request The incoming
+     * request object. Request payload should have a valid JSON representation
+     *  of the desired new user data.
+     * @param \Psr\Http\Message\ResponseInterface $response The response that
+     *  will be used to return any data.
+     * @param Array $args An array containing any URL or Query-String generated
+     *  arguments.
+     * @return String The JSON of the newly created user secret.
+     */
     function create($request, $response, $args)
     {
         try {
@@ -51,6 +68,17 @@ class SecretsController
         }
     }
 
+    /**
+     * Request to get the data for a user secret.
+     *
+     * @param \Psr\Http\Message\ServerRequestInterface $request The incoming
+     *  request object.
+     * @param \Psr\Http\Message\ResponseInterface $response The response that
+     *  will be used to return any data.
+     * @param Array $args An array containing any URL or Query-String generated
+     *  arguments.
+     * @return String The JSON of the requested user secret.
+     */
     function show($request, $response, $args)
     {
         try {
@@ -66,6 +94,18 @@ class SecretsController
         }
     }
 
+    /**
+     * Request to update the information of a certain user secret.
+     *
+     * @param \Psr\Http\Message\ServerRequestInterface $request The incoming
+     *  request object. Request payload should have a valid JSON representation
+     *  of the data to be updated for that user.
+     * @param \Psr\Http\Message\ResponseInterface $response The response that
+     *  will be used to return any data.
+     * @param Array $args An array containing any URL or Query-String generated
+     *  arguments.
+     * @return String The JSON of the updated user secret.
+     */
     function update($request, $response, $args)
     {
         try {
@@ -88,6 +128,17 @@ class SecretsController
         }
     }
 
+    /**
+     * Request to delete a user secret from the system.
+     *
+     * @param \Psr\Http\Message\ServerRequestInterface $request The incoming
+     *  request object.
+     * @param \Psr\Http\Message\ResponseInterface $response The response that
+     *  will be used to return any data.
+     * @param Array $args An array containing any URL or Query-String generated
+     *  arguments.
+     * @return null This endpoint won't return any value.
+     */
     function destroy($request, $response, $args)
     {
         try {

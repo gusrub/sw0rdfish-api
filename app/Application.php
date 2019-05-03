@@ -2,8 +2,6 @@
 
 namespace Sw0rdfish;
 
-require __DIR__ . '/../vendor/autoload.php';
-
 use Sw0rdfish\Helpers\I18n;
 
 /**

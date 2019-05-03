@@ -16,9 +16,9 @@ class PresenceValidation extends AbstractValidation
     /**
      * Creates a new instance of a presence validator with the given parameters.
      *
-     * @param object $object The object instance where the validation will be
-     * run.
-     * @param string $field The property name that must have a value.
+     * @param \Sw0rdfish\Models\BaseModel $object The object instance where the
+     * validation will be run.
+     * @param String $field The property name that must have a value.
      * @param array $options Any additional options for this validator.
      */
     function __construct($object, $field, Array $options = null)

@@ -14,7 +14,7 @@ class ModelException extends \Exception
     /**
      * Creates a new instance of this exception.
      *
-     * @param string $message The message of the exception.
+     * @param String $message The message of the exception.
      * @param \Exception $previous The parent exception, if any.
      */
     public function __construct($message, $previous = null)

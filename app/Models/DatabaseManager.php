@@ -56,8 +56,8 @@ class DatabaseManager
      * Generates a truncation SQL statement to remove all records from a table
      * depending based on the db driver configuration set on the application.
      *
-     * @param string $table The table name that will be truncated.
-     * @return string The truncation query.
+     * @param String $table The table name that will be truncated.
+     * @return String The truncation query.
      */
     public static function getTruncateQuery($table)
     {

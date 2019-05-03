@@ -24,17 +24,17 @@ class BaseModel
 {
 
     /**
-     * @var string int The ID for this record.
+     * @var String The ID for this record.
      */
     public $id;
 
     /**
-     * @var string Date of the creation of this record.
+     * @var String Date of the creation of this record.
      */
     public $createdDate;
 
     /**
-     * @var string Date of the creation of this record.
+     * @var String Date of the creation of this record.
      */
     public $updatedDate;
 
@@ -125,7 +125,7 @@ class BaseModel
      * if its exists or a default field if it does not.
      *
      * @param Array $args An array with parameters to do the ordering.
-     * @return string The order statement string.
+     * @return String The order statement string.
      */
     protected static function allowedOrderField(Array $args = null)
     {
@@ -146,7 +146,7 @@ class BaseModel
      * indicated sort keyword if its allowed or a default field if it does not.
      *
      * @param Array $args An array with parameters to do the sorting.
-     * @return string The sort statement string.
+     * @return String The sort statement string.
      */
     protected static function allowedSortDirection(Array $args = null)
     {
@@ -165,7 +165,7 @@ class BaseModel
      * doing no pagination.
      *
      * @param Array $args An array with parameters to do the paging.
-     * @return string|null The paging statement string.
+     * @return mixed The paging statement string.
      */
     protected static function generateLimitAndOffset(Array $args = null)
     {
@@ -186,7 +186,7 @@ class BaseModel
      * will match exactly the value of `like` which will match parts of it.
      *
      * @param Array $args An array with parameters to do the filtering.
-     * @return string|null The filtering criteria statement string.
+     * @return mixed The filtering criteria statement string.
      */
     protected static function generateConditions(Array $args = null)
     {
@@ -265,7 +265,7 @@ class BaseModel
     /**
      * Gets a friendly name for the model.
      *
-     * @return string A friendly name for the model.
+     * @return String A friendly name for the model.
      */
     protected static function getShortName()
     {
@@ -276,7 +276,7 @@ class BaseModel
      * Executes all validations defined in the model. Will throw a
      * \ValidationException whenever any of them fail.
      *
-     * @param object $obj The object where the validations need to be run
+     * @param \Sw0rdfish\Models\BaseModel $obj The object where the validations need to be run
      * against.
      * @return null
      */
@@ -365,7 +365,7 @@ class BaseModel
     /**
      * Runs a single validation for a model.
      *
-     * @param string $field The field or property of this model that will be
+     * @param String $field The field or property of this model that will be
      * validated.
      * @param Array $validators An array containing the different validations
      * and their options to be run against the designated field.

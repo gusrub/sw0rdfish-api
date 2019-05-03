@@ -5,7 +5,9 @@
 			"path": ".",
       "folder_exclude_patterns": [
         "vendor",
-        "docs"
+        "docs",
+        "build",
+        "output"
       ],
       "file_exclude_patterns": [
         "*.bak",

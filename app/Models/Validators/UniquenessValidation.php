@@ -19,9 +19,9 @@ class UniquenessValidation extends AbstractValidation
 	 * Creates a new instance of a uniqueness validator with the given
 	 * parameters.
 	 *
-	 * @param object $object The object instance where the validation will be
-	 * run.
-	 * @param string $field The property name that must have a unique value.
+	 * @param \Sw0rdfish\Models\BaseModel $object The object instance where the
+     * validation will be run.
+	 * @param String $field The property name that must have a unique value.
 	 * @param array $options An array of options to configure the criteria of
 	 * the uniqueness match. Supported options are `table` for the table that
 	 * should be checked against, `field` to define which field stores the value

@@ -17,13 +17,12 @@ class ResourceLoader
      *
      * @param String $klass The relative model name that we want to load.
      * @param String $identifier The ID of the record that we want to load.
-     * @param ServerRequestInterface $request A server request object where the
-     *  resource will be loaded into.
-     * @param ResponseInterface $response A server response object that will be
-     *  used to handle the request.
-     *
-     * @return ServerRequestInterface A request object with the injected model
-     *  instance.
+     * @param \Psr\Http\Message\ServerRequestInterface $request A server request
+     *  object where the resource will be loaded into.
+     * @param \Psr\Http\Message\ResponseInterface $response A server response
+     *  object that will be used to handle the request.
+     * @return \Psr\Http\Message\ServerRequestInterface A request object with
+     *  the injected model instance.
      */
     public static function load($klass, $identifier, $request, $response)
     {

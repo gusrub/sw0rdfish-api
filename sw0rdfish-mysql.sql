@@ -2,7 +2,7 @@
 
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
-SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
 
 -- -----------------------------------------------------
 -- Schema sw0rdfish
@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `role` VARCHAR(50) NOT NULL,
   `createdDate` DATETIME NOT NULL,
   `updatedDate` DATETIME NULL,
-  UNIQUE INDEX `email_UNIQUE` (`email` ASC),
+  UNIQUE INDEX `email_UNIQUE` (`email` ASC) VISIBLE,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS `secrets` (
   `updatedDate` DATETIME NULL,
   `userId` INT NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_user_id_idx` (`userId` ASC),
+  INDEX `fk_user_id_idx` (`userId` ASC) VISIBLE,
   CONSTRAINT `fk_user_id`
     FOREIGN KEY (`userId`)
     REFERENCES `users` (`id`)
@@ -59,11 +59,12 @@ CREATE TABLE IF NOT EXISTS `user_tokens` (
   `userId` INT NOT NULL,
   `type` VARCHAR(50) NOT NULL,
   `token` VARCHAR(255) NOT NULL,
+  `securityCode` VARCHAR(255) NULL,
   `expiration` DATETIME NULL,
   `createdDate` DATETIME NOT NULL,
   `updatedDate` DATETIME NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_user_tokens_id_idx` (`userId` ASC),
+  INDEX `fk_user_tokens_id_idx` (`userId` ASC) VISIBLE,
   CONSTRAINT `fk_user_tokens_id`
     FOREIGN KEY (`userId`)
     REFERENCES `users` (`id`)

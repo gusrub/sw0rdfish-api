@@ -49,42 +49,42 @@ class Secret extends BaseModel
     ];
 
     /**
-     * @var string A unique name _(per user)_ for this secret.
+     * @var String A unique name _(per user)_ for this secret.
      */
     public $name;
 
     /**
-     * @var string A brief description for this secret.
+     * @var String A brief description for this secret.
      */
     public $description;
 
     /**
-     * @var string Any additional notes for this secret.
+     * @var String Any additional notes for this secret.
      */
     public $notes;
 
     /**
-     * @var string The category for this secret.
+     * @var String The category for this secret.
      */
     public $category;
 
     /**
-     * @var string The username for this secret. This will be encrypted.
+     * @var String The username for this secret. This will be encrypted.
      */
     public $username;
 
     /**
-     * @var string The password for this secret. This will be encrypted.
+     * @var String The password for this secret. This will be encrypted.
      */
     public $password;
 
     /**
-     * @var string The email for this secret.
+     * @var String The email for this secret.
      */
     public $email;
 
     /**
-     * @var string The website URL for this secret.
+     * @var String The website URL for this secret.
      */
     public $website;
 

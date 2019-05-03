@@ -21,7 +21,7 @@ abstract class AbstractValidation
     public $object;
 
     /**
-     * @var string The property name that needs to be validated.
+     * @var String The property name that needs to be validated.
      */
     public $field;
 
@@ -41,8 +41,9 @@ abstract class AbstractValidation
     /**
      * Creates a new instance of a validator.
      *
-     * @param object $object The object where the validation will be run.
-     * @param string $field The property name that needs to be validated.
+     * @param \Sw0rdfish\Models\BaseModel $object The object where the
+     * validation will be run.
+     * @param String $field The property name that needs to be validated.
      * @param Array $options An array containing all the validations and their
      * options for the field. Note that a single field may contain many
      * validations.

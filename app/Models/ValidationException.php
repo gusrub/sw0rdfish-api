@@ -19,7 +19,7 @@ class ValidationException extends \Exception
     /**
      * Creates a new instance of this exception.
      *
-     * @param string $message The message of the exception.
+     * @param String $message The message of the exception.
      * @param Array $errors An array of validation error messages.
      */
     public function __construct($message, $errors)

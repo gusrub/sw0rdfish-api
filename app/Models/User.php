@@ -48,27 +48,27 @@ class User extends BaseModel
     ];
 
     /**
-     * @var string First name of this user.
+     * @var String First name of this user.
      */
     public $firstName;
 
     /**
-     * @var string Last name of this user.
+     * @var String Last name of this user.
      */
     public $lastName;
 
     /**
-     * @var string Email address for this user.
+     * @var String Email address for this user.
      */
     public $email;
 
     /**
-     * @var string Encrypted password for this user to request a session.
+     * @var String Encrypted password for this user to request a session.
      */
     public $password;
 
     /**
-     * @var string Assigned role for this user from the ROLES constant.
+     * @var String Assigned role for this user from the ROLES constant.
      * @see ROLES
      */
     public $role;

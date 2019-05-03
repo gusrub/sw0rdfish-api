@@ -5,6 +5,15 @@ use \Psr\Http\Message\ResponseInterface as Response;
 use \Sw0rdfish\Application as Application;
 use \Sw0rdfish\Helpers\I18n;
 use \Sw0rdfish\Middleware\ResourceLoader;
+use \Sw0rdfish\Errors\Handler;
+
+$app = $this;
+
+// Set custom error handler
+$container = $app->getContainer();
+$container['errorHandler'] = function ($container) {
+    return new Handler();
+};
 
 $this->get('/', function (Request $request, Response $response) {
     return $response->withJson([
@@ -17,23 +26,21 @@ $this->get('/', function (Request $request, Response $response) {
 });
 
 
-$app = $this;
-
 // TOKENS ROUTES
 $this->group('/tokens', function($app) {
     $this->map(
         ['POST'],
         '',
         Sw0rdfish\Controllers\UserTokensController::class . ':create'
-    )->add(function($request, $response, $next) {
+    ); /*->add(function($request, $response, $next) {
         // load service to manage tokens
-        $this['tokenManagerService'] = function ($container) {
+        $this['tokenManagerService'] = function ($container) use($request) {
             $tokenManagerService = new \Sw0rdfish\Services\TokenManagerService($request);
             return $tokenManagerService;
         };
 
         return $next($request, $response);
-    });
+    });*/
 });
 
 // USERS ROUTES

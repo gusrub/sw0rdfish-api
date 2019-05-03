@@ -9,21 +9,22 @@ use Sw0rdfish\Models\ModelException as ModelException;
 use Sw0rdfish\Models\ValidationException as ValidationException;
 
 /**
-*
-*/
-class UsersController
+ * Manages all requests for users management.
+ */
+class UsersController extends BaseController
 {
 
-    protected $container;
-
-    function __construct($container)
-    {
-        // TODO: put this on a base controller
-        $this->container = $container;
-        // $resourceLoaderService = $container['resourceLoaderService'];
-        // $this->resource = $resourceLoaderService->load();
-    }
-
+    /**
+     * Request to get a list of available users.
+     *
+     * @param \Psr\Http\Message\ServerRequestInterface $request The incoming
+     *  request object.
+     * @param \Psr\Http\Message\ResponseInterface $response The response that
+     *  will be used to return any data.
+     * @param Array $args An array containing any URL or Query-String generated
+     *  arguments.
+     * @return Array A list of available users.
+     */
     function index($request, $response, $args)
     {
         try {
@@ -34,6 +35,17 @@ class UsersController
         }
     }
 
+    /**
+     * Request to create a new user.
+     *
+     * @param \Psr\Http\Message\ServerRequestInterface $request The incoming
+     *  request object.
+     * @param \Psr\Http\Message\ResponseInterface $response The response that
+     *  will be used to return any data.
+     * @param Array $args An array containing any URL or Query-String generated
+     *  arguments.
+     * @return String The JSON of the newly created user.
+     */
     function create($request, $response, $args)
     {
         try {
@@ -48,6 +60,17 @@ class UsersController
         }
     }
 
+    /**
+     * Request to get the information of a certain user.
+     *
+     * @param \Psr\Http\Message\ServerRequestInterface $request The incoming
+     *  request object.
+     * @param \Psr\Http\Message\ResponseInterface $response The response that
+     *  will be used to return any data.
+     * @param Array $args An array containing any URL or Query-String generated
+     *  arguments.
+     * @return String The JSON of the requested user.
+     */
     function show($request, $response, $args)
     {
         try {
@@ -61,6 +84,17 @@ class UsersController
         }
     }
 
+    /**
+     * Request to update the information of a certain user.
+     *
+     * @param \Psr\Http\Message\ServerRequestInterface $request The incoming
+     *  request object.
+     * @param \Psr\Http\Message\ResponseInterface $response The response that
+     *  will be used to return any data.
+     * @param Array $args An array containing any URL or Query-String generated
+     *  arguments.
+     * @return String The JSON of the updated user.
+     */
     function update($request, $response, $args)
     {
         try {
@@ -75,6 +109,17 @@ class UsersController
         }
     }
 
+    /**
+     * Request to delete a user from the system.
+     *
+     * @param \Psr\Http\Message\ServerRequestInterface $request The incoming
+     *  request object.
+     * @param \Psr\Http\Message\ResponseInterface $response The response that
+     *  will be used to return any data.
+     * @param Array $args An array containing any URL or Query-String generated
+     *  arguments.
+     * @return null This endpoint won't return any value.
+     */
     function destroy($request, $response, $args)
     {
         try {

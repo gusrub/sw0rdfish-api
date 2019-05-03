@@ -10,29 +10,29 @@ use \InvalidArgumentException as InvalidArgumentException;
 class I18n
 {
     /**
-     * @var The original text that is going to be translated
+     * @var String The original text that is going to be translated
      */
     private $originalText;
 
     /**
-     * @var An array containing key-value pairs for any replacement needed to be
-     *  done within the translation string
+     * @var Array An array containing key-value pairs for any replacement needed
+     *  to be done within the translation string
      */
     private $translationArguments;
 
     /**
-     * @var The translated text to the target language. Note that this does not
-     *  have yet the interpolated values from $translationArguments
+     * @var String The translated text to the target language. Note that this
+     *  does not have yet the interpolated values from $translationArguments
      */
     private $translatedText;
 
     /**
      * Creates a new instance of a translator.
      *
-     * @param string $str The string to be translated.
+     * @param String $str The string to be translated.
      * @param Array $args A key value-pair array containing replacements to be
      *  done in the string.
-     * @param string $language If this is set, it will override the system
+     * @param String $language If this is set, it will override the system
      *  language or the one configured globally in the application.
      * @return I18n A translation object.
      */
@@ -51,7 +51,7 @@ class I18n
      * the request if one was given or from the application configuration as a
      * fallback.
      *
-     * @param string $language The language to use for the translation. e.g.
+     * @param String $language The language to use for the translation. e.g.
      *  'es_MX.utf8'
      */
     private function setLanguage($language = null)
@@ -74,7 +74,7 @@ class I18n
      * Gets the default LOCALE code from either the request or from the
      * application configuration.
      *
-     * @return string The LOCALE code, e.g. 'es_MX.utf8'
+     * @return String The LOCALE code, e.g. 'es_MX.utf8'
      */
     private function getDefaultLanguage()
     {
@@ -118,7 +118,7 @@ class I18n
      * Extracts the argument values and replaces ocurrences in the translated
      * string .
      *
-     * @return string The translated string with the patterns replaced.
+     * @return String The translated string with the patterns replaced.
      */
     private function extractArguments()
     {
@@ -150,13 +150,13 @@ class I18n
      * It can also receive an argument with an array of key-value pairs with
      * strings that should be replaced with certain values.
      *
-     * @param string $str The string to be translated.
+     * @param String $str The string to be translated.
      * @param Array $args A key-value pair array of ocurrences to be replaced in
      *  the translated string. Defaults to null.
-     * @param string $language If given, it will override the request info or
+     * @param String $language If given, it will override the request info or
      *  global application configuration and try to translate with this locale.
      *
-     * @return string The translated string.
+     * @return String The translated string.
      */
     public static function translate($str, Array $args = null, $language = null)
     {

@@ -38,6 +38,13 @@ class UserToken extends BaseModel
      */
     const TOKEN_SIZE = 32;
 
+
+    /**
+     * Strength in bits that is used to generate a security code.
+     */
+    const SECURITY_CODE_SIZE = 16;
+
+
     /**
      * List of validations for this model.
      */
@@ -63,13 +70,13 @@ class UserToken extends BaseModel
     public $userId;
 
     /**
-     * @var string Type of this token that defines what its purpose is.
+     * @var String Type of this token that defines what its purpose is.
      * @see TYPES
      */
     public $type;
 
     /**
-     * @var string A hash containing a securely-random generated token string.
+     * @var String A hash containing a securely-random generated token string.
      */
     public $token;
 
@@ -77,6 +84,13 @@ class UserToken extends BaseModel
      * @var \DateTime Date that this token will expire.
      */
     public $expiration;
+
+    /**
+     * @var String A string containing a securely-random generated security
+     * code. Only used for `password_reset` and `email_confirmation` type of
+     * tokens.
+     */
+    public $securityCode;
 
     /**
      * Default constructor for UserToken.
@@ -98,6 +112,14 @@ class UserToken extends BaseModel
         // override the token, we should set this here ourselves
         if($this->isNew()) {
             $args['token'] = $this->generateSecureToken(self::TOKEN_SIZE);
+
+            if ($this->type != 'session') {
+                $args['securityCode'] = $this->generateSecurityCode(
+                    self::SECURITY_CODE_SIZE
+                );
+            } else {
+                $args['securityCode'] = null;
+            }
         }
 
         parent::__construct($args);
